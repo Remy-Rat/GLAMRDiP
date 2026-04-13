@@ -178,10 +178,11 @@ Calculate Shopify DSR across 7d, 14d, 30d windows. Compare to POS MODEL DSR.
 **SKU categories:**
 - **Kits** — KIT-STA-2, KIT-COM-4, KIT-ULT-6 (compare Shopify DSR directly to POS MODEL)
 - **Heal** — kit-adjusted (standalone + kit sales). POS MODEL already includes kit consumption. Show both standalone and adjusted.
-- **Other liquids** — standalone Shopify DSR only (Base, Sensitive, Seal, Bond, Glow). These are pre-packed in kits from China.
+- **Inserts** — ACC-INS (kit-adjusted: per kit), ACC-LAB and ACC-THA (per order). These show 0 or low in Shopify but are consumed at 3PL level. Track for days cover.
+- **Other liquids** — standalone Shopify DSR only (Base, Sensitive, Seal, Bond, Glow, Sensitive Glow). These are pre-packed in kits from China.
 - **Standalone items** — ACC-REM, ACC-REM-500 (not in kits, straight Shopify comparison)
-- **Colours (POW-*)** — top 15 by 14d volume
-- **DO NOT include** packaging SKUs (STO-*, ACC-INS, ACC-THA)
+- **Colours (POW-*)** — top 15 by 14d volume. Shopify captures kit picks directly (STA×3, COM×6, ULT×9). Include colour demand sanity check: total colour DSR vs expected from kits vs standalone.
+- **DO NOT include** packaging SKUs (STO-*) — these belong in the POS Model Check skill, not sales analysis
 
 **Output table format:**
 ```
@@ -244,14 +245,30 @@ Look for days where 8+ SKUs increase simultaneously in the last 60 days. Try to 
 
 ## Step 5 — Inventory Discrepancy Detection
 
-Scan 3PL data for anomalous single-day movements over last 45 days.
+Scan 3PL data for anomalous single-day movements over last 45 days. This is the accountability step — "Shopify says we sold X, 3PL deducted Y, where's the gap?"
 
-Dynamic thresholds per SKU: `max(actual_dsr × 5, floor)` where floor = 500 (kits/packaging), 200 (liquids), 100 (colours).
+Use the red flag thresholds from `../Context/Deduction Benchmarks.md`. These are per-SKU daily deduction limits — if a single day's deduction exceeds the benchmark, flag it. All colours (POW-*) and stickers (ACC-STI-*) use 30.
 
-Group output:
-- **UNEXPLAINED** — not aligned with container or sales. Sort by absolute impact.
-- **CONTAINER-ALIGNED** — expected, just count them.
-- **COMPONENT TRANSFERS** — component SKUs (HEA-EMP, HEA-LID, HEA-BSH, ACC-RE1-*, ACC-RE5-*) going to 0 = shipped to local filler. Expected — don't alarm.
+Group output into these categories:
+
+### Stock Losses (raise with 3PL)
+3PL stock decreased more than Shopify sales explain. These are the "where did our stock go?" items. Sort by absolute gap (largest first). For each:
+- Show date, SKU, 3PL decrease, Shopify sales that day, unexplained gap
+- This is the list to send to the 3PL to investigate
+
+### Stock Gains (likely reconciliation or check-in)
+3PL stock increased outside of a detected container arrival. Usually means:
+- **Reconciliation** — 3PL found stock during a count (check RECONCILIATION tab)
+- **Ongoing check-in** — container still being processed across multiple days (check if near a container arrival date)
+- **Returns** — customer returns checked back in
+
+Note the likely cause but don't alarm — these are usually positive.
+
+### Container-Aligned
+Expected increases from container check-ins. Just count them.
+
+### Component Transfers
+Component SKUs (HEA-EMP, HEA-LID, HEA-BSH, ACC-RE1-*, ACC-RE5-*) going to 0 = shipped to local filler. Expected — don't alarm.
 
 ---
 
@@ -314,7 +331,7 @@ CONTAINER ARRIVALS DETECTED
   [From 3PL data, with tracker cross-ref]
 
 INVENTORY DISCREPANCIES
-  [Unexplained, container-aligned, component transfers]
+  [Stock losses (raise with 3PL), stock gains (reconciliation/check-in), container-aligned, component transfers]
 
 3PL DEDUCTION CHECK
   [Kit alignment, excluding container days]
@@ -330,8 +347,8 @@ KEY TAKEAWAYS
 
 ## Style Notes
 - Lead with the growth factor reality check — it drives every ordering decision
-- Present discrepancies sorted by impact (largest unexplained gap first)
-- Don't alarm about container-aligned increases or component transfers — label as expected
+- Split discrepancies into **stock losses** (raise with 3PL) and **stock gains** (reconciliation/check-in). Losses sorted by impact — this is the actionable list
+- Don't alarm about container-aligned increases, component transfers, or stock gains — label as expected/positive
 - If 3PL data is stale (>2 days), flag prominently before any analysis
 - When liquids show large variance vs model, note that POS MODEL DSR is manually updated from monthly sales — the model may be stale, not the selling rate wrong
 - The audience is Remy and Daniel — they want what's real vs what the model assumes, and data integrity issues to raise with the 3PL

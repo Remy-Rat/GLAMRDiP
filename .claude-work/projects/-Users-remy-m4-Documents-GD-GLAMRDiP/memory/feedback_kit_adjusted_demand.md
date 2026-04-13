@@ -1,20 +1,31 @@
 ---
-name: Kit-adjusted demand only applies to Heal in AUS
-description: Kits arrive pre-assembled from China. Only Heal is filled locally and added to kits at G3PL. All other liquids are standalone only.
+name: Kit-adjusted demand rules per region
+description: What's picked at the 3PL per kit vs pre-packed from China. Drives which SKUs need kit-adjusted demand in analysis.
 type: feedback
 ---
 
-Do NOT apply kit-adjusted demand to all liquids. Kits arrive pre-assembled from China with liquids already inside.
+Kits arrive pre-assembled from China with liquids + accessories. The 3PL adds locally-filled items, colours, and inserts.
 
-**AUS specifics:**
-- Heal (LIQ-HEA-5): only liquid consumed per kit at warehouse level (filled locally by Outsource Packaging, added to kits at G3PL). Kit-adjusted demand applies.
-- All other liquids (Base, Sensitive, Seal, Bond, Glow): pre-packed in kits from China. G3PL stock only depletes from standalone Shopify sales.
-- Remove 120ml and 500ml: separate standalone items, NOT included in kits.
+**What the 3PL adds per kit (all regions):**
+- LIQ-HEA-5 (Heal) — filled locally, kit-adjusted demand
+- POW-* (colours) — customer picks at checkout: STA=3, COM=6, ULT=9. Shows as individual Shopify line items, so Shopify already captures total colour demand. No kit-adjustment needed for colours in analysis.
+- ACC-INS (Instructions) — picked per kit, kit-adjusted demand
 
-**POS MODEL DSR:** Manually calculated from monthly sales data, pasted periodically. Already accounts for Heal kit consumption. Monitor variance against actual Shopify selling rates.
+**What the 3PL adds to ALL orders:**
+- ACC-LAB (compliance booklet) — consumed per order
+- ACC-THA (Thank You Card) — consumed per order
 
-**Component Map:** Varies by region and may not be fully accurate yet. User plans to improve it. Don't blindly apply kit consumption formulas — confirm per region what's assembled locally vs pre-packed from China.
+**Region-specific locally-filled liquids (kit-adjusted at 3PL):**
+- AUS & CA: Heal only
+- UK: Heal + Base (Chemence) + Glow (Chemence)
+- Nordic: planned to match UK, not yet in place — treat as Heal only
 
-**Why:** Applying kit-adjusted demand to all liquids massively overstates demand (3-10x), leading to wrong days cover and false urgency flags.
+**Standalone items (NOT in kits):**
+- LIQ-SEN-2 (Sensitive Base) — sold separately
+- LIQ-SOA-6 (Sensitive Glow) — sold separately
+- ACC-REM (Remove 120ml) — standalone / bundle with bowl
+- ACC-REM-500 (Remove 500ml) — standalone / bundle with bowl
 
-**How to apply:** In sales data analysis, only kit-adjust Heal. Compare all other liquids' standalone Shopify DSR against POS MODEL DSR. Flag variance between model and actual as the key insight.
+**Why:** Applying kit-adjusted demand to items that are pre-packed from China massively overstates demand. Only items picked from 3PL stock per kit order need adjustment.
+
+**How to apply:** In sales analysis, only kit-adjust items listed under "What the 3PL adds" for the specific region. All other liquids = standalone Shopify DSR only.
