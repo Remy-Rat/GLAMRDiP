@@ -1,4 +1,4 @@
-> **Context:** Get region info (which 3PL tab to use) from `../Regions/[REGION].md`. Get component map and kit-adjusted demand formulas from `../../Shared/Component Map.md`. After completing, update `../Context/Current Issues.md`.
+> **Context:** Get region info (which 3PL tab to use) from `../Regions/[REGION].md`. After completing, update `../Context/Current Issues.md`.
 
 # Sales Data Analysis Skill
 
@@ -11,69 +11,74 @@ User asks for sales analysis, sell-through analysis, inventory trend check, stoc
 
 ### Tabs Used
 - **SHOPIFY** — daily unit sales per SKU. Source of truth for customer demand.
-- **B360** — daily inventory snapshots from the 3PL. Source of truth for stock on hand.
-- **CNTR TRACKER** — container shipment records with delivery dates. Used to explain large inventory increases.
-- **POS MODEL** — current DSR and growth factor settings (the plan).
-- **DSR** — model DSR per SKU.
+- **3PL tab** — daily inventory snapshots. Tab name varies by region:
+  - AUS: `AUS 3GPL` (do NOT use `B360` — that's the old 3PL)
+  - UK: `B360` (transitioning to Fulfillable)
+  - CA: `B360`
+  - Nordic: `B360`
+  - Check `../Regions/[REGION].md` for the correct tab.
+- **CNTR TRACKER** — container shipment records. Often stale — detect arrivals from 3PL data instead.
+- **POS MODEL** — **source of truth** for live DSR, growth factor, and stock on hand.
+  - Kit DSRs: header rows (rows 1-3, col 1) — Starter, Complete, Ultimate
+  - Per-SKU DSR: derived from G3PL ON HAND (col 7) ÷ DAYS COVER (col 8) in the product table
+  - Growth factor: search for 'GROWTH FACTOR' label, value is adjacent cell
+  - DSR is manually calculated from monthly sales and pasted periodically — it is NOT live. Monitor variance between model DSR and actual Shopify selling rates.
 
-### Critical Data Quirks (learned from live runs)
-- **B360 future columns are corrupted.** Greg sets up date columns ahead of time but doesn't paste data until that day. Unpasted columns show as `int64 min` (-9223372036854775808) or NaN. You MUST detect the last valid B360 date before doing any analysis.
+### Critical Data Quirks
+- **3PL future columns are corrupted.** Greg sets up date columns ahead of time but doesn't paste data until that day. Unpasted columns show as `int64 min` (-9223372036854775808) or NaN. ALWAYS detect the last valid date before analysis.
 - **Shopify data has a +1 day lag** — pasted the day after.
-- **CNTR TRACKER is often stale** — ETAs and statuses may not be updated after delivery. Do NOT rely solely on tracker dates for container arrival matching. Detect arrivals from B360 data instead.
-- **Packaging SKUs (STO-*, ACC-INS, ACC-THA) show 0 in Shopify** — they're consumed at warehouse level inside kits, not sold as Shopify line items. Exclude from Shopify DSR comparison. Only assess via B360 deduction rates.
-- **Heal, Remove, and other liquids appear both as standalone Shopify sales AND inside kits.** Shopify DSR for these SKUs only captures standalone purchases. Real demand = standalone + kit consumption. Use the component map below.
+- **CNTR TRACKER is often stale** — detect arrivals from 3PL data instead.
+- **Packaging SKUs (STO-*, ACC-INS, ACC-THA) show 0 in Shopify** — consumed at warehouse level inside kits. Exclude from Shopify DSR comparison.
 
 ---
 
-## Component Map — Kit Contents
+## Kit-Adjusted Demand — Region-Specific
 
-Each kit sold consumes these components at the 3PL. Use this to calculate total demand.
+**Kits arrive pre-assembled from China.** Most liquids are already packed inside the kit. Only locally-filled items are picked separately at the 3PL and consumed per kit sale.
+
+### AUS
+- **Heal (LIQ-HEA-5)** — filled locally by Outsource Packaging, added to kits at G3PL. Kit-adjusted demand = standalone Shopify + kit sales. POS MODEL DSR already includes this.
+- **All other liquids** (Base, Sensitive, Seal, Bond, Glow) — pre-packed in kits from China. G3PL stock only depletes from standalone Shopify sales. Compare standalone Shopify DSR to POS MODEL DSR.
+- **Remove 120ml, Remove 500ml** — standalone items, NOT included in kits. Compare standalone Shopify DSR to POS MODEL DSR.
+
+### Other Regions
+Component map varies by region. Check `../Regions/[REGION].md` and confirm with the user which items are filled locally vs pre-packed from China before applying kit-adjusted demand. When in doubt, use standalone Shopify DSR.
+
+---
+
+## Growth Factor
+
+The growth factor scales the sum of the live kit DSRs from the POS MODEL header.
 
 ```
-Every kit (STA/COM/ULT) consumes per unit:
-  1x LIQ-HEA-5 (Heal)
-  1x powder colour (from customer's selection)
-  1x STO-BUB-BAG-L (Bubble Mailer) OR STO-MAI-BAG-S (Small Satchel)
-  1x STO-MAI-2 (Small Box) — for non-mailer orders
-  1x ACC-INS (Instructions Booklet)
-  1x ACC-THA (Thank You Card)
+base_total = STA_DSR + COM_DSR + ULT_DSR   (from POS MODEL rows 1-3)
+scaled_total = base_total × growth_factor
 
-KIT-STA-2 (Starter Kit) additionally:
-  1x LIQ-BAS-2 (Base) OR LIQ-SEN-2 (Sensitive Base)
-  1x LIQ-SEA-3 (Seal)
-  
-KIT-COM-4 (Complete Kit) additionally:
-  1x LIQ-BAS-2, 1x LIQ-SEA-3, 1x LIQ-BON-1 (Bond), 1x LIQ-GLO-4 (Glow)
-  1x ACC-REM (Remove 120ml)
-
-KIT-ULT-6 (Ultimate Kit) additionally:
-  All of Complete Kit plus: 1x ACC-REM-500 (Remove 500ml)
+Example: 34 + 78 + 35 = 147/day base → at 1.3x = 191/day
 ```
 
-To calculate total demand for a liquid/component:
+To calculate recommended growth factor from actual sales:
 ```
-total_demand = shopify_standalone_sales + (kits_consuming_it × kits_sold_per_day)
+actual_growth = actual_14d_kit_total / base_total
+recommended = actual_growth × 1.1   (10% buffer)
 ```
-
-Example for Heal: `total_heal_demand = shopify_heal + total_kits_sold` (all kits contain 1 Heal)
-Example for Bond: `total_bond_demand = shopify_bond + complete_kits + ultimate_kits`
 
 ---
 
 ## Step 0 — Preprocessing (ALWAYS run first)
 
-This step loads and cleans all data. Run this as a single code block before any analysis.
+Run with: `uv run --with pandas,openpyxl python3 script.py`
 
 ```python
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
 
-file_path = '/mnt/user-data/uploads/[FILENAME].xlsx'
+file_path = '[PATH_TO_FILE].xlsx'
+THREE_PL_TAB = '[REGION_3PL_TAB]'  # e.g. 'AUS 3GPL', 'B360'
 
 # ---- SHOPIFY ----
 shopify_raw = pd.read_excel(file_path, sheet_name='SHOPIFY', header=None)
-# Find header row containing 'Date'
 header_idx = None
 for i in range(10):
     if 'Date' in shopify_raw.iloc[i].astype(str).tolist():
@@ -86,50 +91,28 @@ shopify = shopify.dropna(subset=['date'])
 shopify['sku'] = shopify['sku'].astype(str).str.strip()
 today = shopify['date'].max()
 
-# ---- B360 ----
-b360_raw = pd.read_excel(file_path, sheet_name='B360', header=None)
-b360_skus = b360_raw.iloc[1:, 0].astype(str).str.strip().values
-b360_dates = pd.to_datetime(b360_raw.iloc[0, 1:], errors='coerce')
-valid_idx = ~b360_dates.isna()
-b360_data = b360_raw.iloc[1:, 1:].loc[:, valid_idx.values]
-b360_data.columns = b360_dates[valid_idx].values
-b360_data.index = b360_skus
-b360_data = b360_data.apply(pd.to_numeric, errors='coerce')
+# ---- 3PL TAB ----
+tpl_raw = pd.read_excel(file_path, sheet_name=THREE_PL_TAB, header=None)
+tpl_skus = tpl_raw.iloc[1:, 0].astype(str).str.strip().values
+tpl_dates = pd.to_datetime(tpl_raw.iloc[0, 1:], errors='coerce')
+valid_idx = ~tpl_dates.isna()
+tpl_data = tpl_raw.iloc[1:, 1:].loc[:, valid_idx.values]
+tpl_data.columns = tpl_dates[valid_idx].values
+tpl_data.index = tpl_skus
+tpl_data = tpl_data.apply(pd.to_numeric, errors='coerce')
 
 # CRITICAL: Remove corrupted future columns
-# int64 min = -9223372036854775808, appears in unpasted cells
-b360_data[b360_data < -1000] = np.nan
-
-# Find last valid B360 date (where >50% of SKUs have data)
-valid_counts = b360_data.notna().sum()
-threshold = len(b360_data) * 0.5
+tpl_data[tpl_data < -1000] = np.nan
+valid_counts = tpl_data.notna().sum()
+threshold = len(tpl_data) * 0.3
 valid_date_mask = valid_counts > threshold
-last_valid_b360 = pd.Timestamp(max(b360_data.columns[valid_date_mask]))
-b360 = b360_data.loc[:, b360_data.columns <= last_valid_b360]
+last_valid_tpl = pd.Timestamp(max(tpl_data.columns[valid_date_mask]))
+tpl = tpl_data.loc[:, tpl_data.columns <= last_valid_tpl]
 
-# ---- CNTR TRACKER ----
-cntr_raw = pd.read_excel(file_path, sheet_name='CNTR TRACKER', header=None)
-containers = []
-for i in range(4, min(30, len(cntr_raw))):
-    status = cntr_raw.iloc[i, 0]
-    ref = cntr_raw.iloc[i, 1]
-    eta = pd.to_datetime(cntr_raw.iloc[i, 5], errors='coerce') if pd.notna(cntr_raw.iloc[i, 5]) else pd.NaT
-    stype = cntr_raw.iloc[i, 9] if pd.notna(cntr_raw.iloc[i, 9]) else ''
-    if pd.notna(status) and str(status) not in ['NaN', 'Status']:
-        containers.append({'status': str(status), 'ref': str(ref), 'eta': eta, 'type': str(stype)})
-
-# ---- DSR (model) ----
-dsr_raw = pd.read_excel(file_path, sheet_name='DSR', header=None)
-model_dsr = {}
-for i in range(3, len(dsr_raw)):
-    sku = str(dsr_raw.iloc[i, 0]).strip()
-    dsr_val = dsr_raw.iloc[i, 1]
-    if pd.notna(dsr_val) and sku != 'nan':
-        try: model_dsr[sku] = float(dsr_val)
-        except: pass
-
-# ---- POS MODEL (growth factor) ----
+# ---- POS MODEL (source of truth for DSR + growth factor) ----
 pos_raw = pd.read_excel(file_path, sheet_name='POS MODEL', header=None)
+
+# Growth factor
 growth_factor = None
 for r in range(12):
     for c in range(15):
@@ -142,235 +125,147 @@ for r in range(12):
                     except: pass
             break
 
-# ---- DATA FRESHNESS CHECK ----
+# Kit DSRs from header (rows 1-3, col 1)
+kit_dsr_model = {}
+for r in range(1, 4):
+    name = str(pos_raw.iloc[r, 0]).strip()
+    dsr_val = pd.to_numeric(pos_raw.iloc[r, 1], errors='coerce')
+    if 'Starter' in name: kit_dsr_model['KIT-STA-2'] = dsr_val
+    elif 'Complete' in name: kit_dsr_model['KIT-COM-4'] = dsr_val
+    elif 'Ultimate' in name: kit_dsr_model['KIT-ULT-6'] = dsr_val
+
+# Per-SKU DSR from product table
+model_dsr = {}
+pos_header_row = None
+for r in range(len(pos_raw)):
+    if str(pos_raw.iloc[r, 1]).strip() == 'SKU':
+        pos_header_row = r; break
+if pos_header_row is not None:
+    for r in range(pos_header_row + 1, len(pos_raw)):
+        sku = str(pos_raw.iloc[r, 1]).strip()
+        if sku == 'nan' or sku == '': continue
+        stock = pd.to_numeric(pos_raw.iloc[r, 7], errors='coerce')
+        days_cover = pd.to_numeric(pos_raw.iloc[r, 8], errors='coerce')
+        if pd.notna(stock) and pd.notna(days_cover) and days_cover > 0:
+            model_dsr[sku] = stock / days_cover
+model_dsr.update(kit_dsr_model)
+
+model_kit_total = sum(kit_dsr_model.values())
+model_scaled_total = model_kit_total * growth_factor
+
+# ---- CNTR TRACKER ----
+cntr_raw = pd.read_excel(file_path, sheet_name='CNTR TRACKER', header=None)
+containers = []
+for i in range(4, min(50, len(cntr_raw))):
+    status = cntr_raw.iloc[i, 0]
+    ref = cntr_raw.iloc[i, 1]
+    eta = pd.to_datetime(cntr_raw.iloc[i, 5], errors='coerce') if pd.notna(cntr_raw.iloc[i, 5]) else pd.NaT
+    stype = cntr_raw.iloc[i, 9] if len(cntr_raw.columns) > 9 and pd.notna(cntr_raw.iloc[i, 9]) else ''
+    if pd.notna(status) and str(status) not in ['NaN', 'Status']:
+        containers.append({'status': str(status), 'ref': str(ref), 'eta': eta, 'type': str(stype)})
+
+# ---- DATA FRESHNESS ----
 shopify_age = (pd.Timestamp.now() - today).days
-b360_age = (pd.Timestamp.now() - last_valid_b360).days
-print(f"DATA FRESHNESS:")
-print(f"  Shopify last date: {today.date()} ({'⚠️ STALE' if shopify_age > 2 else '✅'} — {shopify_age}d ago)")
-print(f"  B360 last valid:   {last_valid_b360.date()} ({'⚠️ STALE' if b360_age > 2 else '✅'} — {b360_age}d ago)")
-print(f"  Growth factor:     {growth_factor}x")
+tpl_age = (pd.Timestamp.now() - last_valid_tpl).days
 ```
 
 ---
 
 ## Step 1 — DSR Comparison (Model vs Actual)
 
-Calculate own DSR across 7d, 14d, 30d windows for all sold SKUs.
+Calculate Shopify DSR across 7d, 14d, 30d windows. Compare to POS MODEL DSR.
 
-**SKU categories for this step:**
-- **Kit SKUs** — KIT-STA-2, KIT-COM-4, KIT-ULT-6 (compare directly to model DSR)
-- **Standalone liquids** — LIQ-HEA-5, ACC-REM, ACC-REM-500, LIQ-BON-1, LIQ-BAS-2, LIQ-SEN-2, LIQ-SEA-3, LIQ-GLO-4 (show both Shopify-only and kit-adjusted demand)
+**SKU categories:**
+- **Kits** — KIT-STA-2, KIT-COM-4, KIT-ULT-6 (compare Shopify DSR directly to POS MODEL)
+- **Heal** — kit-adjusted (standalone + kit sales). POS MODEL already includes kit consumption. Show both standalone and adjusted.
+- **Other liquids** — standalone Shopify DSR only (Base, Sensitive, Seal, Bond, Glow). These are pre-packed in kits from China.
+- **Standalone items** — ACC-REM, ACC-REM-500 (not in kits, straight Shopify comparison)
 - **Colours (POW-*)** — top 15 by 14d volume
-- **DO NOT include** packaging SKUs (STO-*, ACC-INS, ACC-THA) — they show 0 in Shopify
-
-For each SKU:
-```python
-for window_days in [7, 14, 30]:
-    start = today - timedelta(days=window_days)
-    period_sales = shopify[(shopify['sku'] == sku) & (shopify['date'] > start)]['units'].sum()
-    dsr = period_sales / window_days
-```
-
-**For liquids, calculate kit-adjusted demand:**
-```python
-kit_total_14d = sum of all kit DSRs (14d)
-starter_14d = dsr for KIT-STA-2
-complete_14d = dsr for KIT-COM-4
-ultimate_14d = dsr for KIT-ULT-6
-
-# Heal: all kits consume 1
-heal_total = heal_standalone + kit_total_14d
-
-# Bond: Complete + Ultimate consume 1
-bond_total = bond_standalone + complete_14d + ultimate_14d
-
-# Remove 120ml: Complete + Ultimate consume 1
-rem120_total = rem120_standalone + complete_14d + ultimate_14d
-
-# Remove 500ml: Ultimate consumes 1
-rem500_total = rem500_standalone + ultimate_14d
-
-# Base: Starter + Complete + Ultimate (assume ~70% choose Base over Sensitive)
-base_total = base_standalone + kit_total_14d * 0.7
-
-# Seal: Starter + Complete + Ultimate
-seal_total = seal_standalone + kit_total_14d
-
-# Glow: Complete + Ultimate consume 1
-glow_total = glow_standalone + complete_14d + ultimate_14d
-```
+- **DO NOT include** packaging SKUs (STO-*, ACC-INS, ACC-THA)
 
 **Output table format:**
 ```
-SKU              Model DSR  Shop 7d  Shop 14d  Shop 30d  Kit-Adj 14d  Gap vs Model
-KIT-STA-2             21.0    15.1     14.1      15.4         —          -33%
-LIQ-HEA-5            85.0     1.4      1.4       1.7       52.1         -39%
+--- KITS ---
+SKU              Model DSR  Shop 7d  Shop 14d  Shop 30d  Gap vs Model
+KIT-STA-2             34.0    38.6     35.1      33.3          +3%
+
+--- HEAL (kit-adjusted: standalone + kit consumption at 3PL) ---
+SKU              Model DSR  Shop 7d  Shop 14d  Shop 30d  Adj 14d  Gap vs Model
+LIQ-HEA-5           184.6     2.9      2.7       3.9    123.1        -33%
+
+--- LIQUIDS (standalone — pre-packed in kits from China) ---
+SKU              Model DSR  Shop 7d  Shop 14d  Shop 30d  Gap vs Model
+LIQ-BAS-2            53.3     0.0     15.6      29.4        -71%
 ```
 
-At the bottom, state:
-- Model growth factor vs actual kit performance as a multiplier (base 1x = 80 kits/day)
-- Recommended growth factor (actual 14d + 10% buffer, minimum 1.0x)
+At the bottom:
+- POS MODEL growth factor vs actual: `actual_14d_kit_total / model_kit_base_total`
+- % below/above scaled target
+- Recommended growth factor (actual × 1.1)
 
 ---
 
 ## Step 2 — Weekly Kit Trend
 
-Group Shopify kit sales into ISO weeks for the last 8 weeks.
+Group Shopify kit sales into ISO weeks for the last 8 weeks. Show a `vs Model` column comparing daily rate to the scaled target.
 
-```python
-kit_sales = shopify[shopify['sku'].isin(kit_skus)].copy()
-kit_sales['week_start'] = kit_sales['date'] - pd.to_timedelta(kit_sales['date'].dt.weekday, unit='d')
-weekly = kit_sales.groupby('week_start').agg(
-    total=('units', 'sum'),
-    days=('date', 'nunique')
-).reset_index()
-weekly['daily'] = weekly['total'] / weekly['days']
-```
-
-Show week-over-week direction with arrows. Flag if:
+Flag if:
 - 3+ consecutive declining weeks
 - Any week >30% above 4-week average (promo spike)
-- Consistent >40% below model DSR
+- Consistent >40% below model scaled target
 
-Also show kit mix percentages (Starter/Complete/Ultimate split) for the last 14 days — useful for validating model ratios.
+Show kit mix (Starter/Complete/Ultimate split) for 14d with model comparison.
 
 ---
 
 ## Step 3 — Realistic Days Cover
 
-For each SKU with stock > 0, calculate days cover at **actual selling rate** vs **model DSR**.
+For each SKU with stock > 0, calculate days cover at **POS MODEL DSR** and **actual Shopify DSR**.
 
-**Use latest valid B360 stock** (from the last valid B360 date identified in preprocessing).
-
-For liquids and components, use the **kit-adjusted demand** from Step 1 as the "actual" rate — not just Shopify standalone.
-
-Output table:
-```
-SKU              Stock   Model DSR  Actual DSR  Model Cover  Actual Cover
-KIT-ULT-6         887      18.0       10.7         49d          83d
-LIQ-HEA-5        1760      85.0       52.1         21d          34d  ← kit-adjusted
-```
+Use latest valid 3PL stock. For Heal, use kit-adjusted actual DSR. For all other liquids, use standalone Shopify DSR.
 
 Flag items:
-- 🚨 OOS (stock = 0 and DSR > 0)
-- ⚠️ <14 days cover at model DSR
-- 📋 <30 days cover at actual rate (matters if selling picks up)
+- **OOS** — stock = 0 and DSR > 0
+- **<14d CRITICAL** — either model or actual cover below 14 days
+- **<30d WARNING** — either model or actual cover below 30 days
 
 ---
 
 ## Step 4 — Container Arrival Auto-Detection
 
-**Do NOT rely on CNTR TRACKER dates** — they are often stale.
+Detect from 3PL data (NOT CNTR TRACKER — it's often stale).
 
-Instead, detect container arrivals directly from B360 data:
-
-```python
-# For each date in B360 (last 60 days), count how many SKUs had increases
-cutoff = today - timedelta(days=60)
-recent_cols = [c for c in b360.columns if pd.Timestamp(c) > cutoff]
-
-for j in range(1, len(recent_cols)):
-    date_col = recent_cols[j]
-    prev_col = recent_cols[j-1]
-    deltas = b360[date_col] - b360[prev_col]
-    deltas = deltas.dropna()
-    
-    # A container check-in = many SKUs increasing simultaneously
-    increases = deltas[deltas > 10]  # ignore tiny fluctuations
-    if len(increases) >= 8:  # 8+ SKUs increasing on same day = container
-        total_increase = increases.sum()
-        # Try to match against CNTR TRACKER (±10 day window since tracker is stale)
-        matched_ref = "no match in tracker"
-        for c in containers:
-            if pd.notna(c['eta']) and abs((pd.Timestamp(date_col) - c['eta']).days) <= 10:
-                matched_ref = f"likely {c['ref']} (tracker ETA: {c['eta'].date()}, status: {c['status']})"
-                break
-```
-
-After detection, flag:
-- **Container detected in B360 but tracker still shows "In Transit"** → tracker needs updating
-- **Tracker shows "Delivered" but no B360 increase detected** → possibly not checked in at 3PL
-- **Container ETA passed >5 days ago, no B360 increase, tracker says "In Transit"** → delayed or lost
+Look for days where 8+ SKUs increase simultaneously in the last 60 days. Try to match against CNTR TRACKER within ±10 day window. Flag:
+- Detected in 3PL but tracker still shows "In Transit" → tracker needs updating
+- Tracker shows "Delivered" but no 3PL increase → possibly not checked in
+- Tracker ETA passed >5 days, no 3PL increase → delayed or lost
 
 ---
 
 ## Step 5 — Inventory Discrepancy Detection
 
-Scan B360 for anomalous single-day movements over the last 45 days.
+Scan 3PL data for anomalous single-day movements over last 45 days.
 
-### Dynamic Thresholds
-Calculate thresholds per SKU based on velocity:
+Dynamic thresholds per SKU: `max(actual_dsr × 5, floor)` where floor = 500 (kits/packaging), 200 (liquids), 100 (colours).
 
-```python
-for sku in b360.index:
-    sku_dsr = actual_dsr_14d.get(sku, 0)
-    
-    # Threshold = max(5x daily rate, minimum_floor)
-    if sku.startswith(('KIT-', 'STO-')): floor = 500
-    elif sku.startswith(('LIQ-', 'ACC-R')): floor = 200
-    else: floor = 100
-    
-    threshold = max(sku_dsr * 5, floor)
-```
-
-### For each flagged movement:
-
-**Large INCREASE (delta > threshold):**
-1. Check if it aligns with a detected container arrival (from Step 4) → expected, label as such
-2. If no container → flag as "unexplained increase" (possible stock correction, return, or data entry)
-
-**Large DECREASE beyond sales (|delta| > threshold AND |delta| > 2× Shopify sales that day):**
-1. Calculate: `unexplained_gap = |B360_decrease| - shopify_sales_that_day`
-2. If gap > threshold → flag as "excess deduction"
-3. If gap ≈ 0 → matches sales, not a discrepancy
-
-**Component wipeouts (HEA-EMP, HEA-LID, HEA-BSH, ACC-RE1-BOT, ACC-RE1-LID, ACC-RE1-INN, ACC-RE5-BOT, ACC-RE5-LID, ACC-RE5-INN going to 0):**
-These are expected when components are shipped to the local filler (Swift in CA, Outsource Packaging in AUS, etc). Note them but don't alarm — label as "component transfer to filler" and cross-reference with Slack for fill PO activity.
-
-### Output format:
-Group discrepancies by type, sort by absolute impact:
-```
-🚨 UNEXPLAINED (not aligned with container or sales):
-  Date       | SKU              | Change   | Shopify | Gap      | Likely Cause
-  2026-04-11 | POW-RAD-043      | -829     | 56      | -773     | Stock correction? Investigate with 3PL
-
-✅ CONTAINER-ALIGNED (expected):
-  2026-03-04 | Multiple SKUs    | +5,200   | —       | —        | Container CA 15012026 check-in
-
-📋 COMPONENT TRANSFERS (expected — local fill):
-  2026-02-27 | HEA-EMP          | -34,200  | 0       | -34,200  | Shipped to Swift for fill PO
-```
+Group output:
+- **UNEXPLAINED** — not aligned with container or sales. Sort by absolute impact.
+- **CONTAINER-ALIGNED** — expected, just count them.
+- **COMPONENT TRANSFERS** — component SKUs (HEA-EMP, HEA-LID, HEA-BSH, ACC-RE1-*, ACC-RE5-*) going to 0 = shipped to local filler. Expected — don't alarm.
 
 ---
 
-## Step 6 — Shopify vs B360 Deduction Check
+## Step 6 — Shopify vs 3PL Deduction Check
 
-For kit SKUs (the most reliable 1:1 comparison), compare daily over last 14 days:
+For kit SKUs, compare daily Shopify sales to 3PL stock deductions over last 14 days.
 
-```python
-for sku in ['KIT-STA-2', 'KIT-COM-4', 'KIT-ULT-6']:
-    # Get B360 values for last 14 days
-    recent_b360 = b360.loc[sku].dropna()
-    recent_dates = [d for d in recent_b360.index if pd.Timestamp(d) > today - timedelta(days=14)]
-    
-    total_b360_change = 0
-    total_shopify = 0
-    days_counted = 0
-    for j in range(1, len(recent_dates)):
-        b360_delta = float(recent_b360[recent_dates[j]]) - float(recent_b360[recent_dates[j-1]])
-        shop_day = shopify[(shopify['sku'] == sku) & 
-                           (shopify['date'].dt.date == pd.Timestamp(recent_dates[j]).date())]['units'].sum()
-        total_b360_change += b360_delta
-        total_shopify += shop_day
-        days_counted += 1
-    
-    avg_b360 = total_b360_change / days_counted  # should be negative
-    avg_shop = total_shopify / days_counted
-    gap = abs(avg_b360) - avg_shop
-    
-    # If gap > 5/day: B360 dropping faster than Shopify explains → possible issue
-    # If gap < -5/day: B360 dropping slower → returns or paste lag
-    # If gap ≈ 0: aligned ✅
+**IMPORTANT: Exclude days where 3PL stock increased** (container arrivals) — these skew the averages. Only count sell-through days.
+
+```
+gap = avg_3PL_deduction_per_day - avg_Shopify_sales_per_day
+If gap < 5: aligned
+If gap > 5: 3PL dropping faster than Shopify explains
+If gap < -5: 3PL dropping slower (returns, paste lag, or data issue)
 ```
 
 This is the cleanest data integrity check. If kits are aligned, 3PL deduction logic is working correctly.
@@ -379,57 +274,55 @@ This is the cleanest data integrity check. If kits are aligned, 3PL deduction lo
 
 ## Step 7 — Selling Performance Flags
 
-### Overperformers (selling >20% above model DSR)
-List any SKU where actual 14d DSR > model DSR × 1.2. These may stock out faster than predicted.
+### Overperformers (>20% above model DSR)
+May stock out faster than POS MODEL predicts.
 
-### Underperformers (selling >40% below model DSR)
-List any SKU where actual 14d DSR < model DSR × 0.6. Capital tied up unnecessarily.
+### Underperformers (>40% below model DSR)
+Model DSR may need refresh. Flag that DSR is manually updated from monthly sales — if recent weeks are consistently lower, the model is stale.
 
 ### Dead stock (in stock, 0 Shopify sales in 14d)
-For colour SKUs (POW-*): list all with B360 stock > 0 but zero Shopify sales in 14 days. 
-Count them and total the units sitting idle. Note if these have been flagged in Slack previously (likely unlaunched colours).
+For colour SKUs (POW-*): count and total units sitting idle. Likely unlaunched colours.
 
 ### Sensitive Base signal
-Compare LIQ-SEN-2 vs LIQ-BAS-2 performance against model. If Sensitive is overperforming while Base underperforms, the 70/30 kit split assumption may need adjusting.
+Compare LIQ-SEN-2 vs LIQ-BAS-2 standalone performance. Model assumes 70/30 kit split.
 
 ---
 
 ## Output Structure
 
-Present the full analysis in this order:
-
 ```
-📊 Sales Data Analysis — [REGION] — [Date]
+SALES DATA ANALYSIS — [REGION] — [Date]
 
-⚠️ DATA FRESHNESS
+DATA FRESHNESS
   Shopify: [date] ([X]d ago)
-  B360: [date] ([X]d ago)
-  [Flag if either is >2 days stale]
+  3PL: [date] ([X]d ago)
+  Growth factor: [X]x
+  POS MODEL base: [X]/day → scaled: [X]/day
 
-🎯 DSR: MODEL vs REALITY
-  [Table from Step 1 — kits, kit-adjusted liquids, top colours]
-  Model: Xx (Y kits/day) → Actual: Zx (W kits/day)
-  Recommended growth factor: [X]x
+DSR: MODEL vs REALITY
+  [Kits, Heal (kit-adjusted), liquids (standalone), top colours]
+  Growth factor comparison and recommendation
 
-📈 WEEKLY KIT TREND
-  [8-week trend from Step 2]
+WEEKLY KIT TREND
+  [8-week trend with vs Model column]
+  [Kit mix with model comparison]
 
-📦 REALISTIC DAYS COVER
-  [Table from Step 3 — model vs actual cover, using kit-adjusted rates for liquids]
+REALISTIC DAYS COVER
+  [Model vs actual cover]
 
-🚢 CONTAINER ARRIVALS DETECTED
-  [Auto-detected from B360 in Step 4, with tracker cross-ref and staleness flags]
+CONTAINER ARRIVALS DETECTED
+  [From 3PL data, with tracker cross-ref]
 
-🚨 INVENTORY DISCREPANCIES
-  [Grouped output from Step 5 — unexplained, container-aligned, component transfers]
+INVENTORY DISCREPANCIES
+  [Unexplained, container-aligned, component transfers]
 
-✅ 3PL DEDUCTION CHECK
-  [Kit Shopify vs B360 alignment from Step 6]
+3PL DEDUCTION CHECK
+  [Kit alignment, excluding container days]
 
-🔍 SELLING PERFORMANCE FLAGS
-  [Overperformers, underperformers, dead stock from Step 7]
+SELLING PERFORMANCE FLAGS
+  [Over/underperformers, dead stock, sensitive base signal]
 
-🔑 KEY TAKEAWAYS
+KEY TAKEAWAYS
   [3-5 bullets: what needs action, what's FYI]
 ```
 
@@ -438,8 +331,7 @@ Present the full analysis in this order:
 ## Style Notes
 - Lead with the growth factor reality check — it drives every ordering decision
 - Present discrepancies sorted by impact (largest unexplained gap first)
-- Don't alarm about container-aligned increases — confirm and label as expected
-- Don't alarm about component transfers to filler — label as expected  
-- If B360 data is stale (>2 days), flag this prominently before any analysis
-- For dead stock colours, explicitly note whether they've been flagged in Slack previously
+- Don't alarm about container-aligned increases or component transfers — label as expected
+- If 3PL data is stale (>2 days), flag prominently before any analysis
+- When liquids show large variance vs model, note that POS MODEL DSR is manually updated from monthly sales — the model may be stale, not the selling rate wrong
 - The audience is Remy and Daniel — they want what's real vs what the model assumes, and data integrity issues to raise with the 3PL

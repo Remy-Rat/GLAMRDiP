@@ -1,0 +1,3 @@
+- [POS MODEL is source of truth](feedback_pos_model_source_of_truth.md) — use POS MODEL tab for DSR, not DSR tab
+- [Kit-adjusted demand: Heal only in AUS](feedback_kit_adjusted_demand.md) — kits pre-assembled from China, only Heal added locally
+- [Use uv for Python](feedback_use_uv.md) — always use uv run, never pip install

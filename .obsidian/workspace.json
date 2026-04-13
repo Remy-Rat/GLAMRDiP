@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Ops/Skills/Region Recap.md",
+                "file": "Ops/Regions/AUS.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Region Recap"
+              "title": "AUS"
             }
           }
         ]
@@ -94,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Ops/Skills/Region Recap.md",
+                "file": "Ops/Regions/AUS.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for Region Recap"
+              "title": "Backlinks for AUS"
             }
           },
           {
@@ -113,12 +113,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Ops/Skills/Region Recap.md",
+                "file": "Ops/Regions/AUS.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from Region Recap"
+              "title": "Outgoing links from AUS"
             }
           },
           {
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Ops/Skills/Region Recap.md",
+                "file": "Ops/Regions/AUS.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Region Recap"
+              "title": "Outline of AUS"
             }
           }
         ]
@@ -186,24 +186,24 @@
   },
   "active": "7b3e98c6e06f5fd0",
   "lastOpenFiles": [
+    "Ops/Regions/CA.md",
     "Ops/Skills/POS Model Check.md",
     "Ops/Skills/Region Recap.md",
-    "Ops/Skills/Weekly Inventory Summary.md",
     "Ops/Skills/Sales Data Analysis.md",
-    "Ops/Context/Recent Decisions.md",
-    "Ops/Context/Upcoming Orders.md",
-    "Ops/Context/Current Issues.md",
-    "Ops/Channels/Slack Channels.md",
+    "Ops/Skills/Weekly Inventory Summary.md",
+    "Ops/Regions/AUS.md",
     "Ops/Regions/Nordic.md",
     "Ops/Regions/UK.md",
-    "Ops/Regions/CA.md",
-    "Ops/Regions/AUS.md",
+    "Ops/Context/Upcoming Orders.md",
     "Shared/Component Map.md",
-    "Shared/People.md",
-    "Marketing/CLAUDE.md",
-    "Ops/CLAUDE.md",
     "CLAUDE.md",
     "README.md",
+    "Ops/CLAUDE.md",
+    "Shared/People.md",
+    "Ops/Channels/Slack Channels.md",
+    "Ops/Context/Current Issues.md",
+    "Ops/Context/Recent Decisions.md",
+    "Marketing/CLAUDE.md",
     "Archive/Weekly Summaries",
     "Archive",
     "Shared/Products",

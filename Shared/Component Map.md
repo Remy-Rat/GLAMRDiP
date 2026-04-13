@@ -2,22 +2,22 @@
 
 ## Kit → Component Consumption (per unit sold)
 
-| Component | SKU | Starter | Complete | Ultimate |
-|-----------|-----|---------|----------|----------|
-| Heal | LIQ-HEA-5 | 1 | 1 | 1 |
-| Base* | LIQ-BAS-2 | 1 | 1 | 1 |
-| Sensitive Base* | LIQ-SEN-2 | 1 | 1 | 1 |
-| Seal | LIQ-SEA-3 | 1 | 1 | 1 |
-| Bond | LIQ-BON-1 | — | 1 | 1 |
-| Glow | LIQ-GLO-4 | — | 1 | 1 |
-| Remove 120ml | ACC-REM | — | 1 | 1 |
-| Remove 500ml | ACC-REM-500 | — | — | 1 |
-| Powder colour | POW-* | 1 | 1 | 1 |
-| Bubble Mailer | STO-BUB-BAG-L | 1 | 1 | 1 |
-| Small Satchel (alt) | STO-MAI-BAG-S | 1 | 1 | 1 |
-| Small Box | STO-MAI-2 | 1 | 1 | 1 |
-| Instructions | ACC-INS | 1 | 1 | 1 |
-| Thank You Card | ACC-THA | 1 | 1 | 1 |
+| Component           | SKU           | Starter | Complete | Ultimate |
+| ------------------- | ------------- | ------- | -------- | -------- |
+| Heal                | LIQ-HEA-5     | 1       | 1        | 1        |
+| Base*               | LIQ-BAS-2     | 1       | 1        | 1        |
+| Sensitive Base*     | LIQ-SEN-2     | 1       | 1        | 1        |
+| Seal                | LIQ-SEA-3     | 1       | 1        | 1        |
+| Bond                | LIQ-BON-1     | —       | 1        | 1        |
+| Glow                | LIQ-GLO-4     | —       | 1        | 1        |
+| Remove 120ml        | ACC-REM       | —       | 1        | 1        |
+| Remove 500ml        | ACC-REM-500   | —       | —        | 1        |
+| Powder colour       | POW-*         | 1       | 1        | 1        |
+| Bubble Mailer       | STO-BUB-BAG-L | 1       | 1        | 1        |
+| Small Satchel (alt) | STO-MAI-BAG-S | 1       | 1        | 1        |
+| Small Box           | STO-MAI-2     | 1       | 1        | 1        |
+| Instructions        | ACC-INS       | 1       | 1        | 1        |
+| Thank You Card      | ACC-THA       | 1       | 1        | 1        |
 
 *Base/Sensitive split: approximately 70% Base / 30% Sensitive across all kits.
 
@@ -50,9 +50,16 @@ Remove 500ml:   standalone + ultimate           (only Ultimate includes)
 - **KIT-ULT-6** — Ultimate Kit
 
 ## Growth Factor
-- Base = 80 kits/day (1.0x)
-- A growth factor of 1.3x = 104 kits/day
-- Recommended calculation: actual 14d kit DSR ÷ 80, then +10% buffer
+The growth factor scales the sum of the live kit DSRs from the POS MODEL.
+
+**Example:** If POS MODEL DSRs are STA=34, COM=78, ULT=35 (total 147/day), then:
+- 1.0x = 147 kits/day
+- 1.3x = 191.1 kits/day
+- 1.4x = 205.8 kits/day
+
+**Recommended calculation:** actual 14d kit DSR ÷ POS MODEL base total, then +10% buffer.
+
+**Source of truth for DSR:** always the `POS MODEL` tab in the Order Schedule xlsx.
 
 ---
 
