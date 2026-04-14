@@ -5,6 +5,13 @@
 - **Slack Channel:** #aus-inventory (C08SYFYEUUE)
 - **Order Schedule 3PL Tab:** `AUS 3GPL` (do NOT use `B360` — that's the old 3PL)
 
+## Inventory Config
+- **Labels SKU:** `ACC-LAB`
+- **Kit-adjusted items:** LIQ-HEA-5 (Heal), ACC-INS (Instructions) — filled/picked locally per kit
+- **3PL-supplied packaging:** None — all packaging tracked in G3PL
+- **ShipHero available:** Yes — export PO CSVs for check-in tracking
+- **Local fillers:** Outsource Packaging (Heal, Remove 120ml, Remove 500ml)
+
 ---
 
 ## 3PL — G3PL

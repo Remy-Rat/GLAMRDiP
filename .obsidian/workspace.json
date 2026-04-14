@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Ops/Regions/AUS.md",
+                "file": "Ops/Context/Current Issues.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "AUS"
+              "title": "Current Issues"
             }
           }
         ]
@@ -94,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Ops/Regions/AUS.md",
+                "file": "Ops/Context/Current Issues.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for AUS"
+              "title": "Backlinks for Current Issues"
             }
           },
           {
@@ -113,12 +113,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Ops/Regions/AUS.md",
+                "file": "Ops/Context/Current Issues.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from AUS"
+              "title": "Outgoing links from Current Issues"
             }
           },
           {
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Ops/Regions/AUS.md",
+                "file": "Ops/Context/Current Issues.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of AUS"
+              "title": "Outline of Current Issues"
             }
           }
         ]
@@ -187,36 +187,39 @@
   "active": "7b3e98c6e06f5fd0",
   "lastOpenFiles": [
     "Ops/Context/Deduction Benchmarks.md",
-    "Ops/Channels/Slack Channels.md",
-    "Shared/Component Map.md",
-    "Ops/Skills/Carton Fulfillment Labels.md",
-    "Ops/Skills/Region Recap.md",
-    "Ops/Skills/Sales Data Analysis.md",
-    "Ops/Context/Improvement Roadmap.md",
-    "Ops/Skills/Weekly Inventory Summary.md",
-    "Ops/Skills/POS Model Check.md",
-    "carton-fulfillment-labels-skill.md",
+    "Ops/Context/Lead Times.md",
+    "Ops/Context/Recent Decisions.md",
+    "Ops/Context/Upcoming Orders.md",
     "Ops/Regions/AUS.md",
     "Ops/Regions/CA.md",
     "Ops/Regions/Nordic.md",
     "Ops/Regions/UK.md",
-    "Ops/Context/Upcoming Orders.md",
+    "Ops/Skills/Weekly Inventory Summary.md",
+    "Ops/Skills/Sales Data Analysis.md",
+    "Ops/Skills/Region Recap.md",
+    "Ops/Skills/POS Model Check.md",
+    "Ops/Skills/Carton Fulfillment Labels.md",
+    "Archive/Region Reviews/UK/2026-04-14 UK Region Review.md",
+    "Archive/Region Reviews/CA/2026-04-14 CA Region Review.md",
+    "Archive/Region Reviews/UK",
+    "Archive/Region Reviews/Nordic",
+    "Archive/Region Reviews/CA",
+    "Archive/Region Reviews/AUS",
+    "Archive/Region Reviews",
+    "Ops/Context/Improvement Roadmap.md",
+    "Shared/Component Map.md",
+    "Ops/Channels/Slack Channels.md",
+    "carton-fulfillment-labels-skill.md",
     "CLAUDE.md",
     "README.md",
     "Ops/CLAUDE.md",
     "Shared/People.md",
     "Ops/Context/Current Issues.md",
-    "Ops/Context/Recent Decisions.md",
     "Marketing/CLAUDE.md",
     "Archive/Weekly Summaries",
     "Archive",
     "Shared/Products",
     "Shared",
-    "Marketing/Skills",
-    "Marketing/Context",
-    "Marketing/Campaigns",
-    "Marketing",
-    "Ops/Suppliers",
-    "Ops/Skills"
+    "Marketing/Skills"
   ]
 }

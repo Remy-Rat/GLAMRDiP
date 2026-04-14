@@ -18,3 +18,9 @@
 |---------|-----|---------|
 | #glamrdip-g3pl | C0AKYJ5LDN0 | AUS 3PL (G3PL) — fulfilment, priority orders, returns |
 | #glamrdip-ca-247 | C090USSSYN9 | CA 3PL (247 Fulfilment) — fulfilment, priority orders |
+
+## Marketing / Sales Context
+| Channel | ID | Purpose |
+|---------|-----|---------|
+| #cro-team-meetings | C098QGQ6NLS | CRO changes (upsells, layout changes, bundles) — cross-reference with sales spikes |
+| #sale-announcements | C091PEBAS65 | Sale events, promos, discounts — cross-reference with sales spikes/drops |

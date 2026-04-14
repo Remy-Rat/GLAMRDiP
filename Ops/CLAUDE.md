@@ -16,7 +16,7 @@
 ## Skills (task procedures)
 - `Skills/Weekly Inventory Summary.md` — Monday morning routine, all 5 channels
 - `Skills/Region Recap.md` — deep dive on one region (Slack + Gmail + synthesis)
-- `Skills/POS Model Check.md` — validate POS model xlsx against Slack reality
+- `Skills/POS Model Check.md` — stock position check using ShipHero PO data (confirmed vs pending vs quarantined, check-in progress, double-count detection, packaging monitoring)
 - `Skills/Sales Data Analysis.md` — full xlsx analysis (DSR, days cover, discrepancies, trends)
 
 ## Key Operational Rules

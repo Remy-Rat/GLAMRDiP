@@ -5,6 +5,14 @@
 - **Slack Channel:** #uk-inventory (C08THPCCCRF)
 - **Order Schedule 3PL Tab:** `B360` (transitioning to Fulfillable)
 
+## Inventory Config
+- **Labels SKU:** `ACC-LAB-UK`
+- **Kit-adjusted items:** LIQ-HEA-5 (Heal), LIQ-BAS-2 (Base), LIQ-GLO-4 (Glow), ACC-INS (Instructions) — filled locally by Chemence/Oils4Life per kit
+- **3PL-supplied packaging:** TBD — confirm with Fulfillable
+- **ShipHero available:** No — Fulfillable uses a different system. No PO CSV exports for check-in tracking.
+- **Local fillers:** Chemence (Base, Glow, Seal — 6-8 week lead time at 8k qty), Oils4Life (Heal)
+- **Exiting filler:** Liquipak (Remove 120ml/500ml) — no longer filling. Final PO placed. No replacement found.
+
 ---
 
 ## 3PL (old) — Borderless 360 / B360

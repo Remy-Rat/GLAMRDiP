@@ -1,3 +1,10 @@
+- [Remy's role and workflow](user_remy_role.md) — daily review process, container-by-container forecasting is the core task
 - [POS MODEL is source of truth](feedback_pos_model_source_of_truth.md) — use POS MODEL tab for DSR, not DSR tab
-- [Kit-adjusted demand: Heal only in AUS](feedback_kit_adjusted_demand.md) — kits pre-assembled from China, only Heal added locally
+- [Kit-adjusted demand per region](feedback_kit_adjusted_demand.md) — kits pre-assembled from China, region-specific local fills
 - [Use uv for Python](feedback_use_uv.md) — always use uv run, never pip install
+- [Google Drive Sheet IDs](reference_google_drive_sheets.md) — file IDs for Order Schedules, export via gcloud
+- [ShipHero PO exports](reference_shiphero_po_exports.md) — CSV exports solve partial check-in tracking
+- [POS Check redesign](project_pos_check_redesign.md) — in progress, handles double-counting + packaging
+- [Regional SKU quirks](feedback_regional_sku_quirks.md) — ACC-LAB is region-suffixed, STO-BUB-BAG-S varies by 3PL
+- [Region review chain flow](feedback_region_review_flow.md) — Recap → POS Check → Sales Analysis, pause for context between each
+- [Verify user context](feedback_verify_user_context.md) — always cross-check user-provided dates/statuses against Gmail/Slack before using

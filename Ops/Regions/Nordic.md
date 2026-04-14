@@ -5,6 +5,13 @@
 - **Slack Channel:** #nordic-inventory (C08THPG5KJ5)
 - **Order Schedule 3PL Tab:** `B360`
 
+## Inventory Config
+- **Labels SKU:** TBD — confirm Nordic-specific labels SKU
+- **Kit-adjusted items:** LIQ-HEA-5 (Heal), ACC-INS (Instructions) — currently Heal only. Planned: add Base + Glow (matching UK) but not yet in place
+- **3PL-supplied packaging:** TBD — confirm with Shelfless
+- **ShipHero available:** TBD — depends on Shelfless system
+- **Local fillers:** None currently — planned to match UK setup
+
 ---
 
 ## 3PL — Shelfless

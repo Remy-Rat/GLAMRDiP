@@ -9,15 +9,20 @@ User asks for sales analysis, sell-through analysis, inventory trend check, stoc
 
 ## Data Sources (all from the Order Schedule xlsx)
 
+### Important: Data Source for DSR Calculations
+All DSR calculations use the **SHOPIFY tab raw data** directly (7d/14d/30d windows from the most recent date). Do NOT use the SALES tab — its date range is manually set and may be stale or set to a non-standard period. The SALES tab is ignored for this analysis.
+
+3PL deduction checks use the **3PL tab raw data** directly (daily stock snapshots, excluding container arrival days).
+
 ### Tabs Used
-- **SHOPIFY** — daily unit sales per SKU. Source of truth for customer demand.
+- **SHOPIFY** — daily unit sales per SKU. Source of truth for customer demand. Calculate DSR from raw data.
 - **3PL tab** — daily inventory snapshots. Tab name varies by region:
   - AUS: `AUS 3GPL` (do NOT use `B360` — that's the old 3PL)
   - UK: `B360` (transitioning to Fulfillable)
   - CA: `B360`
   - Nordic: `B360`
   - Check `../Regions/[REGION].md` for the correct tab.
-- **CNTR TRACKER** — container shipment records. Often stale — detect arrivals from 3PL data instead.
+- **CNTR TRACKER** — inactive tab. Do not use. Detect container arrivals from 3PL data instead (look for days where 8+ SKUs increase simultaneously).
 - **POS MODEL** — **source of truth** for live DSR, growth factor, and stock on hand.
   - Kit DSRs: header rows (rows 1-3, col 1) — Starter, Complete, Ultimate
   - Per-SKU DSR: derived from G3PL ON HAND (col 7) ÷ DAYS COVER (col 8) in the product table
@@ -27,7 +32,7 @@ User asks for sales analysis, sell-through analysis, inventory trend check, stoc
 ### Critical Data Quirks
 - **3PL future columns are corrupted.** Greg sets up date columns ahead of time but doesn't paste data until that day. Unpasted columns show as `int64 min` (-9223372036854775808) or NaN. ALWAYS detect the last valid date before analysis.
 - **Shopify data has a +1 day lag** — pasted the day after.
-- **CNTR TRACKER is often stale** — detect arrivals from 3PL data instead.
+- **CNTR TRACKER is inactive** — detect arrivals from 3PL data instead (8+ SKUs increasing on the same day = container check-in).
 - **Packaging SKUs (STO-*, ACC-INS, ACC-THA) show 0 in Shopify** — consumed at warehouse level inside kits. Exclude from Shopify DSR comparison.
 
 ---
@@ -234,12 +239,11 @@ Flag items:
 
 ## Step 4 — Container Arrival Auto-Detection
 
-Detect from 3PL data (NOT CNTR TRACKER — it's often stale).
+Detect from 3PL data directly. CNTR TRACKER is inactive — do not use.
 
-Look for days where 8+ SKUs increase simultaneously in the last 60 days. Try to match against CNTR TRACKER within ±10 day window. Flag:
-- Detected in 3PL but tracker still shows "In Transit" → tracker needs updating
-- Tracker shows "Delivered" but no 3PL increase → possibly not checked in
-- Tracker ETA passed >5 days, no 3PL increase → delayed or lost
+Look for days where 8+ SKUs increase simultaneously in the last 60 days. These are container check-in events. Try to match against POS MODEL shipment blocks by comparing detected arrival dates to Est. Arrival dates (±10 day window).
+
+For each detected arrival, show: date, SKU count, total units, top 5 SKUs, and whether it matches a known POS MODEL shipment.
 
 ---
 
@@ -291,6 +295,40 @@ This is the cleanest data integrity check. If kits are aligned, 3PL deduction lo
 
 ## Step 7 — Selling Performance Flags
 
+### Sales Spikes (7d DSR > 30d DSR by 50%+)
+Flag any SKU where the 7d selling rate is 50%+ above the 30d average. This could indicate:
+- A promo or campaign driving demand
+- A CRO change (upsell, bundle, layout change)
+- A TikTok/social media moment
+- Seasonal surge
+- A pricing error on the website
+
+**Cross-reference context:** When spikes are detected, check `#sale-announcements` (C091PEBAS65) for active promos and `#cro-team-meetings` (C098QGQ6NLS) for recent CRO changes that could explain the spike. This turns "X spiked" into "X spiked — likely driven by [specific change]."
+
+Show the 7d, 14d, 30d DSRs so the trend is visible. These items may stock out faster than expected.
+
+```
+SALES SPIKES (7d significantly above 30d):
+  SKU              7d DSR  14d DSR  30d DSR  Spike vs 30d
+  POW-OAK-283       24.6     20.9     13.8       +78%    ← trending up fast
+  KIT-STA-2         38.6     35.1     33.3       +16%    (below 50% threshold — not flagged)
+```
+
+### Sales Drops (7d DSR < 30d DSR by 40%+)
+Flag any SKU where the 7d selling rate has dropped 40%+ below the 30d average. This could indicate:
+- OOS on the website (check Shopify store)
+- Product removed from active listings
+- Marketing/CRO pulled back (check `#cro-team-meetings`)
+- Post-promo normalisation (check `#sale-announcements` for recent sale end dates)
+- Seasonal decline
+
+```
+SALES DROPS (7d significantly below 30d):
+  SKU              7d DSR  14d DSR  30d DSR  Drop vs 30d
+  LIQ-BAS-2          0.0     15.6     29.4       -100%   ← check if OOS on website
+  POW-XXX-123        5.0      8.2     12.1        -59%
+```
+
 ### Overperformers (>20% above model DSR)
 May stock out faster than POS MODEL predicts.
 
@@ -337,7 +375,7 @@ INVENTORY DISCREPANCIES
   [Kit alignment, excluding container days]
 
 SELLING PERFORMANCE FLAGS
-  [Over/underperformers, dead stock, sensitive base signal]
+  [Sales spikes, sales drops, over/underperformers, dead stock, sensitive base signal]
 
 KEY TAKEAWAYS
   [3-5 bullets: what needs action, what's FYI]
