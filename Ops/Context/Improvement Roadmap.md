@@ -15,6 +15,7 @@
 - [ ] **Scheduled runs** — script runs on review schedule (Mon=AUS, Tue=UK, Wed=CA, Fri=Nordic). Data ready when Remy starts the review. Recap still done interactively.
 
 ## Priority 2 — When 3PL transitions settle (2-4 weeks)
+- [ ] **Local filler packaging sheets** — Remy has Google Sheets tracking packaging held at each filler (Oils4Life, Chemence, Outsource Packaging, Swift, etc.). Connect these so POS Check can cross-reference: how many empty bottles/lids/brushes the filler has on hand → how many fills they can do before needing a packaging top-up from the 3PL or CN.
 - [ ] **Shopify OOS check** — flag products marked OOS on the website that still have stock at the 3PL. Revenue leak detection.
 - [ ] **DSR staleness detection** — flag when POS MODEL DSR drifts >30% from actual Shopify DSR for 3+ consecutive weeks. Prompt Greg to refresh.
 - [ ] **Fulfillable PO data** — once UK stabilises, check if Fulfillable has equivalent PO export for check-in tracking (like ShipHero for AUS).

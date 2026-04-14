@@ -42,9 +42,9 @@ Express shipments are faster (~16 days to AUS per POS MODEL) but more expensive.
 - Total: TBD — Remy to confirm
 
 ### UK — Chemence (Base, Glow, Seal) / Oils4Life (Heal)
-- Chemence: **6-8 weeks** at 8,000 unit quantities. Payment required before dispatch (usually day before).
+- Chemence: **6-8 weeks** at 8,000 unit quantities (Viktorija confirmed 13 Apr 2026). Payment required before dispatch (usually day before). Delivery to Fulfillable via Woodview courier (no tracking, next-day delivery from Corby).
 - Oils4Life (Heal): TBD — Remy to confirm
-- Liquipak (Remove 120ml/500ml): EXITING — final PO placed, no replacement filler found
+- Liquipak (Remove 120ml/500ml): EXITING — final PO placed Apr 2026, no replacement filler found. ~160d coverage from 800L pre-mix.
 
 ## How to Use for Stock-Out Forecasting
 

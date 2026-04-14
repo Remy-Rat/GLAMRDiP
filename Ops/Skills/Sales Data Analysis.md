@@ -34,6 +34,23 @@ All DSR calculations use the **SHOPIFY tab raw data** directly (7d/14d/30d windo
 - **Shopify data has a +1 day lag** — pasted the day after.
 - **CNTR TRACKER is inactive** — detect arrivals from 3PL data instead (8+ SKUs increasing on the same day = container check-in).
 - **Packaging SKUs (STO-*, ACC-INS, ACC-THA) show 0 in Shopify** — consumed at warehouse level inside kits. Exclude from Shopify DSR comparison.
+- **Bundle sales inflate 3PL deduction rates.** ACC-REM-BUN-1 (120ml + Bowl) and ACC-REM-BUN-2 (500ml + Bowl) sell as bundle SKUs on Shopify, but 3PL deducts the component SKUs individually. LIQ-SET (Liquids Set) deducts 1x of all 6 liquids per sale. If Greg sets POS MODEL DSR from 3PL deduction rates rather than Shopify sales, the model DSR for Remove 500ml, Remove Bowl, and liquids will be overstated. Always compare model DSR against Shopify standalone sales to detect this.
+
+---
+
+## Pre-built Scripts
+
+Run `../Scripts/extract.py [REGION]` first to download the xlsx and parse all tabs into structured JSON. Then pipe into the analysis scripts:
+
+```bash
+uv run --with pandas,openpyxl python3 Ops/Scripts/extract.py AUS > /tmp/aus.json
+cat /tmp/aus.json | uv run --with pandas python3 Ops/Scripts/dsr.py
+cat /tmp/aus.json | uv run --with pandas python3 Ops/Scripts/deductions.py
+```
+
+The scripts handle all data quirks (corrupted columns, last valid date detection, Shopify +1 day lag, container arrival exclusion). Use their output as the data foundation, then interpret and write the narrative.
+
+If the scripts are unavailable or need updating, fall back to the inline preprocessing below.
 
 ---
 

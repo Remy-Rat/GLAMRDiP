@@ -1,66 +1,145 @@
+> **Context:** Get region info from `../Regions/[REGION].md`. Get kit-adjusted items from `../../Shared/Component Map.md`. After completing, update `../Context/Current Issues.md`.
+
 # Region Recap Skill
 
 ## Trigger
 User says something like "do CA recap", "check on UK", "AUS review", "what's going on in Nordic", or any variation requesting a deep look at a specific region.
 
+## Where This Fits
+
+The recap is the **entry point** in the review cycle:
+
+```
+1. RECAP (this skill) — what's the story? Slack/Gmail context, what changed, what's open.
+2. POS CHECK — what do the numbers say? Stock position, forecasts, actions.
+3. SALES ANALYSIS — how are we selling? DSR, trends, discrepancies.
+4. USER POSTS SUMMARY — Remy writes the Slack update for the region channel.
+5. SUMMARY REVIEW (optional) — check the message against findings.
+```
+
+The recap should NOT duplicate quantitative analysis — that's for the POS Check and Sales Analysis. Instead it should:
+- Set the narrative context
+- Identify what's changed since the last review
+- Flag what the POS Check and Sales Analysis should focus on
+- Surface decisions that are pending and emails that need action
+
 ---
 
 ## Region Info
-Get the region's channel IDs, supplier contacts, and 3PL info from `../Regions/[REGION].md`.
+Get the region's channel IDs, supplier contacts, 3PL info, and inventory config from `../Regions/[REGION].md`. Also read `../Context/Current Issues.md` for the region's last known state.
 
 ---
 
-## Instructions
+## Phase 1 — Slack Context
 
-### Phase 1 — Slack Context (always do this)
+1. **Read the region's Slack channel** (last 30 days, or since last recap if more recent).
+2. **Find all summary messages** (format: `DD.MM.YYYY REGION SUMMARY`). For each one, note the date and key discussion points.
+3. **Identify the most recent summary** and read its thread for replies/decisions.
+4. **Capture all messages posted after the most recent summary** — these are live updates not yet captured.
 
-1. **Read 30 days of the region's Slack channel.** This is the primary source of truth.
-2. **Identify the most recent summary** (format: `DD.MM.YYYY REGION SUMMARY`). Read its thread for any replies.
-3. **Identify the previous summary** before that one. Compare: what was flagged then vs what's resolved now? What's still open?
-4. **Capture all messages posted after the most recent summary** — these are live updates, follow-ups, and new issues.
+### What to extract from each summary:
+- Discussion points / action items
+- Container & order status at that time
+- Selling performance vs forecast (kit % and overall %)
+- Any decisions made in replies
 
-### Phase 2 — Email Context (always do this)
+### Issue lifecycle tracking:
+For each topic mentioned across the summaries, classify it:
+- **NEW** — first appearance this cycle
+- **ONGOING** — mentioned in 2+ consecutive summaries, stable
+- **ESCALATING** — getting worse (stock dropping, timeline slipping, no progress)
+- **IMPROVING** — getting better (stock arriving, issue being resolved)
+- **RESOLVED** — explicitly closed or no longer mentioned for 2+ summaries
+- **STALLED** — action needed but no progress for 2+ weeks
 
-5. **Search Gmail for recent emails** (last 21 days) involving the region's key contacts. Use the supplier/contact names from the Region file. Run 2-3 targeted searches, for example:
-   - The filler company
-   - The 3PL
-   - Any known hot topic
-6. **Read the most recent emails in the key threads** — focus on: what was the last message, who sent it, is there a reply outstanding?
-
-### Phase 3 — Compile the Recap
-
-Present the recap in this structure:
+Note when each issue was **first raised** and how many summaries it's appeared in. If something has been flagged 4+ times, say so — that's a pattern, not an incident.
 
 ---
 
-#### 🇽🇽 [REGION] Recap — [Today's Date]
+## Phase 2 — Email Context
 
-**The situation right now:**
-A dot point breakdown in plain-English summary of where things stand. What's the main thing going on?
+5. **Search Gmail** (last 21 days) using the search terms from the Region file. Run 2-3 targeted searches:
+   - The filler(s) — latest fill status, dispatch dates, payment
+   - The 3PL — latest operational updates, stock counts, issues
+   - Any hot topic identified in Phase 1
 
-**Open threads:**
-For each active issue, cover:
-- **What it is**
-- **Where it's at** — last known status from Slack + email combined
-- **What's outstanding** — who owes what, any emails awaiting reply, decisions needed
-- **How long it's been** — if something has been dragging, say so
+6. **For each key email thread**, extract:
+   - Last message: who sent it, when, what it says
+   - Is there a reply outstanding? From whom?
+   - Any specific dates, numbers, or commitments made
 
-Order by urgency — the thing that needs action soonest goes first.
+7. **Cross-reference email findings with Slack.** Where email gives a more specific date or number than Slack, use the email version. Where Slack has context email doesn't (e.g. Daniel's interpretation), note both.
 
-**Containers & Orders:**
-- What's in transit and when it's expected
-- What's in production and estimated completion
-- What's planned but not yet placed
-- Any POs from #general-inventory that are relevant to this region and haven't been confirmed as placed
+---
 
-**Selling performance:**
-Note the most recent DSR vs actual from the last summary. If underselling has been a trend, note how many weeks.
+## Phase 3 — Compile the Recap
 
-**Emails needing action:**
-List any email threads where:
-- A supplier hasn't replied and it's been 3+ days
-- We owe someone a reply
-- A decision is waiting on Joel or Daniel
+### Output Structure:
+
+```
+🇽🇽 [REGION] Recap — [Today's Date]
+
+THE SITUATION RIGHT NOW
+  3-5 dot points. What's the headline? What's the main risk? What's going well?
+
+WHAT CHANGED SINCE LAST RECAP
+  Diff against the last recap or Current Issues. Explicitly state:
+  - What's NEW (not in last recap)
+  - What RESOLVED (was open, now closed)
+  - What ESCALATED (was flagged, got worse)
+  - What IMPROVED (was flagged, got better)
+
+OPEN THREADS
+  For each active issue:
+  - Status tag: [NEW] [ONGOING] [ESCALATING] [STALLED] [IMPROVING]
+  - First raised: [date] ([X] weeks ago)
+  - Current state: what Slack + email combined say
+  - Outstanding actions: who owes what
+  Order by urgency — most actionable first.
+
+SELLING TREND
+  Pull the kit % vs forecast from the last 6-8 summaries. Present as a mini table:
+  | Period | Kits vs Forecast | Notable |
+  Show the trajectory — is it improving, declining, or flat?
+  Don't analyse DSR or colour demand here — that's for Sales Analysis.
+
+DECISIONS PENDING
+  Explicitly list items waiting on Joel, Daniel, or Greg. These often get buried.
+  Format: "[Person]: [what they need to do] — [context/deadline]"
+
+EMAILS NEEDING ACTION
+  - Supplier hasn't replied (3+ days)
+  - We owe someone a reply
+  - Payment or approval waiting
+
+WATCH FOR IN POS CHECK
+  Based on what you've learned, flag 3-5 things the POS Check should focus on:
+  - "Verify Base/Glow cover at kit-adjusted rate — Fulfillable now picks per kit"
+  - "Check if UK 03062026 has STA allocation — STA selling 71% above model"
+  - "B360 Packup block — confirm what's actually transferring"
+  These are hypotheses from the qualitative context that need data to confirm.
+
+WATCH FOR IN SALES ANALYSIS
+  Flag 2-3 things for the Sales Analysis to investigate:
+  - "STA demand spike — is 71% sustained or one-off?"
+  - "Overall -7% but kits +5% — standalone products dragging?"
+  - "First positive kit week since Feb — verify with full data"
+```
+
+---
+
+## Phase 4 — Post-Cycle Review (Optional)
+
+After the full cycle (Recap → POS Check → Sales Analysis → user posts Slack summary), the user may ask to review their message. When triggered:
+
+1. Read the user's Slack message
+2. Cross-reference against all findings from the three skills
+3. Flag:
+   - Anything materially incorrect (wrong date, wrong number)
+   - Important findings not mentioned
+   - Items that could be clearer or more specific
+   - Stale info carried forward from a previous summary
+4. Suggest additions if warranted — but respect that the user knows their audience
 
 ---
 
@@ -68,26 +147,36 @@ List any email threads where:
 
 ### AUS
 - Use `AUS 3GPL` tab in the order schedule, NOT `B360`
-- 3PL channel is #glamrdip-g3pl — read this for fulfilment context
+- 3PL channel is #glamrdip-g3pl — read this for fulfilment context (G3PL = Jake, David)
+- Outsource Packaging (OP) fills Heal, Remove 120ml, Remove 500ml — check for ingredient status
 
 ### UK
-- Transitioning from B360 to Fulfillable (mid-April 2026)
-- Run the recap against BOTH 3PLs until transition confirmed complete
-- Check for any Borderless 360 handover emails
+- 3PL is Fulfillable (live since 13 Apr 2026). B360 stock-out process underway.
+- Fulfillable picks Base + Glow + Heal per kit (automation rules confirmed 13 Apr). POS MODEL DSR for Base & Glow may be understated — flag for POS Check.
+- Chemence fills Base, Glow, Seal (6-8 week lead at 8k qty). Oils4Life fills Heal.
+- Liquipak exiting — no replacement filler found. Track this as a stalled issue.
+- ACC-LAB-UK printed locally by Print Runner (14-21d lead) — don't flag for CN container.
+- B360 Packup = stock transfer from old 3PL, not a CN shipment. No Est. Completion/Arrival from Sally.
+
+### CA
+- 3PL is 247 Fulfilment. Channel is #glamrdip-ca-247.
+- Swift Innovations fills Heal, Remove 120ml, Remove 500ml.
 
 ### Nordic
-- Transitioned from Dippi brand to GLAMRDiP late March 2026
-- Check for any branding-related stock issues (old labels, etc.)
+- Transitioned from Dippi brand to GLAMRDiP late March 2026.
+- Check for any branding-related stock issues (old labels, etc.).
+- Chemence fill may be needed — check Slack for Nordic liquids discussion.
 
 ---
 
 ## Style Notes
-- Don't just repeat Slack messages — synthesise. If the same issue has been mentioned in 4 consecutive summaries, say "this has been flagged since [date]".
-- Combine Slack and email into one view per topic.
-- Be direct about what needs action vs what's just context.
-- If a channel has been quiet or the summary is stale (14+ days old), flag that upfront.
+- **Synthesise, don't transcribe.** If the same issue has been in 6 summaries, say "flagged since [date], now in its 6th week" — don't repeat each mention.
+- **Combine Slack and email into one view per topic.** Don't have separate Slack and email sections — merge them by topic.
+- **Be direct about staleness.** If something has been stalled for weeks, call it out. "Liquipak replacement: 6 weeks, no progress. This is now the longest-running unresolved item."
+- **Dates over durations.** "Payment due 27 Apr" not "payment due in 13 days."
+- **The recap is context for humans, not data for machines.** Write it so Joel can skim it in 2 minutes and know what needs his attention.
 
 ---
 
 ## Post-Task
-Update `../Context/Current Issues.md` with the current state for this region.
+Update `../Context/Current Issues.md` with the current state for this region. Replace that region's section entirely.

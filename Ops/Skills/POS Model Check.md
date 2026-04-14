@@ -56,6 +56,23 @@ One CSV per active Purchase Order. Export from ShipHero > Purchase Orders > [PO]
 - **ShipHero PO status doesn't always flip** from Pending to Closed. Don't rely on status — use Quantity vs Quantity Received per SKU to determine completion.
 - **Quarantined stock** shows in ShipHero On Hand but NOT in Available. The gap = quarantined + backorder allocated. Look for SKUs with "-QUARANTINED" suffix in PO exports.
 - **Packaging SKUs (STO-\*, ACC-INS, ACC-LAB, ACC-THA) don't sell on Shopify.** Monitor only via 3PL deduction rates.
+- **Bundle sales inflate 3PL deduction rates.** ACC-REM-BUN-1 (120ml + Bowl) and ACC-REM-BUN-2 (500ml + Bowl) sell as bundle SKUs on Shopify, but 3PL deducts the component SKUs individually. LIQ-SET (Liquids Set) deducts 1x of all 6 liquids per sale. If Greg sets POS MODEL DSR from 3PL deduction rates rather than Shopify sales, the model DSR for Remove 500ml, Remove Bowl, and liquids will be overstated. Always compare model DSR against Shopify standalone sales to detect this.
+
+---
+
+## Pre-built Scripts
+
+Run `../Scripts/extract.py [REGION]` first to download the xlsx and parse all tabs into structured JSON. Then pipe into the analysis scripts:
+
+```bash
+uv run --with pandas,openpyxl python3 Ops/Scripts/extract.py AUS > /tmp/aus.json
+cat /tmp/aus.json | uv run --with pandas python3 Ops/Scripts/forecast.py
+cat /tmp/aus.json | uv run --with pandas python3 Ops/Scripts/deductions.py
+```
+
+The scripts handle all data quirks (corrupted columns, last valid date detection, container arrival exclusion, benchmark comparison). Use their output as the data foundation, then interpret and write the narrative.
+
+If the scripts are unavailable or need updating, fall back to the inline preprocessing below.
 
 ---
 
@@ -180,6 +197,30 @@ for f in shiphero_files:
             'available': int(row.get('Available', 0)),
         }
 ```
+
+---
+
+## Step 0b — Kit-Adjusted DSR Validation
+
+Before proceeding, validate whether the POS MODEL DSR already includes kit consumption for each kit-adjusted item (check `../../Shared/Component Map.md` for the region).
+
+For each kit-adjusted SKU:
+```
+kit_consumption = sum of scaled kit DSRs that consume this item
+model_dsr = stock / days_cover from POS MODEL
+
+if model_dsr >= kit_consumption * 0.8:
+    # Model DSR already includes kit consumption (e.g. Heal, ACC-INS)
+    kit_adjusted_dsr = model_dsr
+else:
+    # Model DSR is standalone only — ADD kit consumption
+    kit_adjusted_dsr = model_dsr + kit_consumption
+    # FLAG: "POS MODEL DSR understated for [SKU] — standalone {model_dsr}/day + kit {kit_consumption}/day = {kit_adjusted_dsr}/day"
+```
+
+**Why this matters:** When a region changes 3PL or changes its kit assembly process, items may become newly kit-adjusted (or stop being kit-adjusted). The POS MODEL may not be updated yet. Always verify against the Component Map and recent 3PL comms.
+
+Cross-reference with B360/3PL deduction data where available — if the 3PL was deducting a liquid at ~1/day but the Component Map says it's kit-adjusted at 90/day, the 3PL process may have recently changed. Check Slack/Gmail for 3PL setup changes.
 
 ---
 
@@ -478,7 +519,48 @@ WHAT NEEDS ACTION
 
 ---
 
-## Step 10 — Recommended Next PO Place Date
+## Step 10a — Local Fill Forecast
+
+For regions with active local fillers (Chemence, Oils4Life, Swift, Outsource Packaging), forecast when the next fill needs to be placed. This is often more urgent than CN container timing.
+
+### For each locally-filled liquid:
+
+```
+# Current fill in pipeline
+fill_arriving = dispatch_date + transit_days
+stock_at_arrival = current_stock - (days_to_arrival * kit_adjusted_dsr)
+stock_after_fill = stock_at_arrival + fill_qty
+
+# When does post-fill stock hit target cover?
+days_to_target = (stock_after_fill / kit_adjusted_dsr) - target_cover
+restock_needed_by = fill_arriving + days_to_target
+place_next_by = restock_needed_by - filler_lead_time
+```
+
+### Demand spike adjustment
+
+If a known demand spike is approaching (Birthday Sale, Black Friday, seasonal):
+- Check the growth factor in the relevant container header block (e.g. 1.4x for Birthday Sale)
+- For the spike period (~2-4 weeks), use scaled DSR instead of baseline
+- This pulls the "place by" date forward — show both dates (baseline vs spike-adjusted)
+
+### Output
+
+```
+LOCAL FILL FORECAST
+
+Chemence — Base (LIQ-BAS-2) — DSR: 89.6/day kit-adjusted
+  Current: 1,629 units (18d)
+  Fill arriving: 29 Apr (+8,000) → 8,317 post-fill (93d)
+  Next fill place by: ~12 May (at 8-week lead)
+  If Birthday Sale (1.4x late Jul): place by ~5 May
+```
+
+Only show locally-filled items. If no local fills active: "No active local fills for this region."
+
+---
+
+## Step 10b — Recommended Next PO Place Date
 
 Using the lead time framework from `../Context/Lead Times.md`, calculate when the next PO needs to be placed to maintain 14-21 days of kit cover.
 
@@ -551,6 +633,13 @@ ACC-REM-BOW  1,435   80.0    18d     PAST                PAST             🔴 e
 - Same degradation as above
 - Note which 3PL system the region uses and whether equivalent PO data is available
 
+**If region is mid-3PL transition:**
+- Two 3PLs may be active. Stock at old 3PL = pending transfer, not sellable until physically moved.
+- The POS MODEL may have a "Packup" or transfer block in Express Shipment columns — treat this as a stock transfer, not a CN shipment. It has no Est. Completion/Arrival dates from Sally.
+- 3PL process changes (e.g. new 3PL picks different items per kit) may change which items are kit-adjusted. Verify against recent emails to the new 3PL.
+- Don't assume quarantined stock at the old 3PL is usable — it may include components, returns, or work-order inventory that isn't finished product. Cross-check with stocktake data.
+- Check whether the stock-out/offboarding process has been initiated: deposit paid, work orders submitted, stocktake timeline confirmed.
+
 ---
 
 ## Output Structure
@@ -591,8 +680,14 @@ STOCK-OUT FORECAST
 WHAT NEEDS ACTION
   [Step 9 — 🔴 / 🟡 / 🟢 tiers, driven by forecast]
 
+LOCAL FILL FORECAST
+  [Step 10a — per locally-filled liquid: current fill ETA, post-fill cover, next placement date, spike adjustment]
+
 PO RECOMMENDATIONS
-  [Step 10 — next PO place dates, raw goods deadlines, flagged items]
+  [Step 10b — next PO place dates, raw goods deadlines, flagged items]
+
+FOLLOW-UP ITEMS
+  Immediate / By end of month / Ongoing — with checkboxes
 ```
 
 ---
