@@ -29,15 +29,16 @@
 - **CA 21062026 (Birthday Sale) deposit needed by ~22 Apr.** Sally waiting on bottles, B115 jars, deposit.
 - **ACC-REM-BOW model DSR overstated (80/d model vs 18.5/d actual).** Driven by both Remove bundles (BUN-1 + BUN-2). Greg to correct to ~20/d.
 
-## 🇬🇧 UK — last updated 14 Apr 2026
-- **LIQ-BAS-2 (Base) stocks out ~28 Apr at kit-adjusted rate** — 1,629 units at Fulfillable, 114.4/day kit-adjusted DSR (model shows 22/day standalone only). Chemence fill (8000) dispatches 28 Apr — 0-day margin. Payment due 27 Apr to Joel. CRITICAL.
-- **LIQ-GLO-4 (Glow) at 17d kit-adjusted cover** — 1,608 units, 92.4/day kit-adjusted. B360 Packup (+596) buys a few more days. Chemence fill (8000) arriving ~29 Apr covers this.
-- **POS MODEL DSR understated for Base & Glow** — model uses standalone rates (22/day Base, 11/day Glow). Fulfillable now picks these per kit (confirmed 13 Apr). Model needs updating to reflect kit-adjusted demand.
+## 🇬🇧 UK — last updated 15 Apr 2026
+- **LIQ-BAS-2 (Base) at 15d kit-adjusted cover — stocks out ~30 Apr.** 1,469 units at Fulfillable, 96.2/day kit-adjusted DSR (model shows 22/day standalone only — **understated by 77%**). Chemence fill (8,000) dispatches 28 Apr — 0-day margin. If fill slips 2 days, kits can't ship. CRITICAL.
+- **LIQ-GLO-4 (Glow) at 15d kit-adjusted cover — stocks out ~30 Apr.** 1,499 units, 97.7/day kit-adjusted (model shows 11/day — **understated by 89%**). Chemence fill (8,000) arriving ~29 Apr. Same razor-thin margin as Base. CRITICAL.
+- **KIT-STA-2 at 24d actual cover — stocks out ~10 May.** 367 units at 15.0/day actual (model: 11.0). B360 Packup has ~496 STA kits — if transferred, extends to ~11 Jun. UK 03062026 arrives 8 Jun. Need Packup transfer confirmed.
+- **POS MODEL DSR understated for Base & Glow** — Greg must update to kit-adjusted rates (~96/d Base, ~98/d Glow). Current model shows 67d and 136d cover; reality is 15d each.
 - **B360 Packup transfer timing unknown** — 288,898 units at old 3PL including 45 OOS colours, 19,445 STO-BUB-BAG-S, and inserts. No confirmed transfer schedule to Fulfillable.
-- **ACC-LAB-UK at 51d cover, no inbound** — 9,421 at Fulfillable + 1,396 from B360 = 59d at 183.7/day. Nothing on UK 03062026 or UK 02072026. Needs to be on next container.
-- **Fulfillable live since 13 Apr** — stock sync enabled, ~250 orders processing, ~50 backorders being cleared. Minor ACC-REM-BUN-1 bundle error (4 orders, rectified). EMPTY-GLASS-BOT-INNER under received by 19,228.
-- **Chemence next fill order being placed** — Daniel placing 8000 Base + 8000 Glow "over coming days". 6-8 week lead time confirmed.
-- **Liquipak exiting** — final Remove PO placed (2 Apr). 800L pre-mix for 160d coverage of Remove 120ml/500ml. No replacement filler found despite outreach to 20+ UK fillers.
+- **No Fulfillable tab in Order Schedule** — B360 tab is now stale for operational use. Greg needs to set up Fulfillable tab or ShipHero data feed for ongoing 3PL analysis.
+- **8 colours critical (<30d), 45 OOS.** Top sellers Sincere (23d) and Peachy (23d) will stock out before UK 03062026 (8 Jun). B360 Packup may have stock — unconfirmed.
+- **ACC-LAB-UK at 50d cover (9,235 units), no inbound.** At 183.7/day, stocks out ~4 Jun. Not on UK 03062026 or UK 02072026. Needs to be added.
+- **Growth factor aligned: 1.1x model, 1.08x actual.** UK is the healthiest region. Recommended: 1.19x. No ordering adjustment needed.
 
 ## 🇸🇪 Nordic — last updated 14 Apr 2026
 - **ACC-REM (Remove 120ml): 3d cover — OOS imminent.** 29 units at 8.9/d. No GLAMRDiP stock exists. Only Dippi stock remains. Must be on NORDIC 01072026 or sourced locally.
