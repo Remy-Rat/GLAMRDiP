@@ -17,7 +17,7 @@ Run all three skills in sequence for the specified region:
 2. **POS Check** — Read and execute `Ops/Skills/POS Model Check.md`. Use context from the recap to focus the analysis. Save to `Archive/Region Reviews/$ARGUMENTS/POS Checks/`.
 3. **Sales Analysis** — Read and execute `Ops/Skills/Sales Data Analysis.md`. Save to `Archive/Region Reviews/$ARGUMENTS/Sales Analysis/`.
 
-All three outputs use today's date as the filename.
+Filename convention: `YYYY-MM-DD REGION Type.md` (e.g. `2026-04-15 CA POS Check.md`).
 
 Between each step, present the output and pause for the user to confirm before moving to the next step. The user may want to provide additional context (e.g. "B360 Packup stock is the stock from our old 3PL") before the POS Check runs.
 

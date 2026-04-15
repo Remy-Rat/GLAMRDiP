@@ -317,7 +317,7 @@ def parse_3pl(file_path, tab_name, lookback_days=45):
     }
 
 
-def parse_shopify(file_path):
+def parse_shopify(file_path, region="AUS"):
     shopify_raw = pd.read_excel(file_path, sheet_name="SHOPIFY", header=None)
     header_idx = None
     for i in range(10):
@@ -326,13 +326,37 @@ def parse_shopify(file_path):
             header_idx = i
             break
 
-    shopify = shopify_raw.iloc[header_idx + 1 :].copy()
-    shopify.columns = ["date", "sku", "units"]
-    shopify["date"] = pd.to_datetime(shopify["date"], errors="coerce")
-    shopify["units"] = pd.to_numeric(shopify["units"], errors="coerce").fillna(0)
-    shopify = shopify.dropna(subset=["date"])
-    shopify["sku"] = shopify["sku"].astype(str).str.strip()
-    shopify = shopify[shopify["sku"] != "nan"]
+    # Nordic has 4 Shopify stores side-by-side (DK, NO, SE, FI)
+    # Detect by checking if header row has multiple "Date" entries
+    header_row = shopify_raw.iloc[header_idx].astype(str).tolist()
+    date_cols = [c for c, v in enumerate(header_row) if "Date" in str(v)]
+
+    if len(date_cols) > 1:
+        # Multi-store layout (Nordic): each store is a (Date, SKU, Units) group
+        frames = []
+        for date_col in date_cols:
+            sku_col = date_col + 1
+            units_col = date_col + 2
+            if units_col >= len(shopify_raw.columns):
+                continue
+            df = shopify_raw.iloc[header_idx + 1 :, [date_col, sku_col, units_col]].copy()
+            df.columns = ["date", "sku", "units"]
+            df["date"] = pd.to_datetime(df["date"], errors="coerce")
+            df["units"] = pd.to_numeric(df["units"], errors="coerce").fillna(0)
+            df["sku"] = df["sku"].astype(str).str.strip()
+            df = df.dropna(subset=["date"])
+            df = df[df["sku"] != "nan"]
+            frames.append(df)
+        shopify = pd.concat(frames, ignore_index=True)
+    else:
+        # Single-store layout (AUS, UK, CA)
+        shopify = shopify_raw.iloc[header_idx + 1 :].copy()
+        shopify.columns = ["date", "sku", "units"]
+        shopify["date"] = pd.to_datetime(shopify["date"], errors="coerce")
+        shopify["units"] = pd.to_numeric(shopify["units"], errors="coerce").fillna(0)
+        shopify = shopify.dropna(subset=["date"])
+        shopify["sku"] = shopify["sku"].astype(str).str.strip()
+        shopify = shopify[shopify["sku"] != "nan"]
 
     latest = shopify["date"].max()
 
@@ -348,7 +372,10 @@ def parse_shopify(file_path):
         sku_dsr[sku] = {"7d": dsr(sku, 7), "14d": dsr(sku, 14), "30d": dsr(sku, 30)}
 
     # Weekly kit trend (last 9 weeks)
-    kit_skus = ["KIT-STA-2", "KIT-COM-4", "KIT-ULT-6"]
+    # Include all kit SKU variants (D- prefix, -UNIT suffix)
+    kit_skus = [s for s in all_skus if "KIT-" in s]
+    if not kit_skus:
+        kit_skus = ["KIT-STA-2", "KIT-COM-4", "KIT-ULT-6"]
     kit_data = shopify[shopify["sku"].isin(kit_skus)].copy()
     kit_data["week"] = kit_data["date"].dt.isocalendar().week.astype(int)
     kit_data["year"] = kit_data["date"].dt.isocalendar().year.astype(int)
@@ -373,7 +400,7 @@ def parse_shopify(file_path):
         })
 
     # Dead stock (colours with stock — needs cross-ref with POS MODEL, done by caller)
-    colours_14d_zero = [s for s in all_skus if s.startswith("POW-") and sku_dsr.get(s, {}).get("14d", 0) == 0]
+    colours_14d_zero = [s for s in all_skus if "POW-" in s and sku_dsr.get(s, {}).get("14d", 0) == 0]
 
     return {
         "latest_date": latest.strftime("%Y-%m-%d"),
@@ -390,9 +417,12 @@ def main():
         sys.exit(1)
 
     region = sys.argv[1].upper()
-    if region not in SHEET_IDS:
+    # Normalize: dict keys use title case for Nordic
+    region_map = {k.upper(): k for k in SHEET_IDS}
+    if region not in region_map:
         print(f"Unknown region: {region}. Use AUS, UK, CA, or Nordic.", file=sys.stderr)
         sys.exit(1)
+    region = region_map[region]
 
     print(f"Downloading {region} order schedule...", file=sys.stderr)
     file_path = download_xlsx(region)
@@ -402,10 +432,20 @@ def main():
     pos = parse_pos_model(file_path)
 
     print(f"Parsing 3PL tab ({TPL_TABS[region]})...", file=sys.stderr)
-    tpl = parse_3pl(file_path, TPL_TABS[region])
+    try:
+        tpl = parse_3pl(file_path, TPL_TABS[region])
+    except (ValueError, KeyError) as e:
+        print(f"WARNING: 3PL tab parse failed ({e}). Running without 3PL data.", file=sys.stderr)
+        tpl = {
+            "last_valid_date": None,
+            "arrivals": [],
+            "arrival_dates": [],
+            "sku_deductions": {},
+            "red_flags": [],
+        }
 
     print("Parsing SHOPIFY...", file=sys.stderr)
-    shop = parse_shopify(file_path)
+    shop = parse_shopify(file_path, region=region)
 
     output = {
         "region": region,

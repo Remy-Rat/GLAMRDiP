@@ -1,4 +1,4 @@
-# Current Issues — last updated 14 Apr 2026
+# Current Issues — last updated 15 Apr 2026
 
 ## 🇦🇺 AUS — last updated 14 Apr 2026
 - **ACC-LAB (Labels Booklet) at 17d cover, NO INBOUND on any container.** 3,896 units, 227.6/day deduction rate. Compliance-critical — cannot ship without them. Must order from Avi Printing immediately.
@@ -19,8 +19,15 @@
 - ✅ Coconut Oil + Vitamin E received at Outsource Packaging 13 Apr
 - ✅ Previous OP fill (PO 25-02-2026) delivered to G3PL, POD confirmed 9 Apr
 
-## 🇨🇦 CA — last updated [DATE]
-- (to be populated after first CA review)
+## 🇨🇦 CA — last updated 15 Apr 2026
+- **CA 03022026 + CA 07042026 container: held at customs, not paid for release.** 94,268 units across 104 SKUs. 13 days past ETA (2 Apr). Joel must pay customs/duties. Once released, ~3-5 days for 247 to check in.
+- **Growth factor 2.0x is wrong — actual 0.66x.** Selling 52.6 kits/day vs 160/d scaled target. 67% below for 8 weeks. Recommended: 0.72x. Every POS MODEL days cover is ~3x overstated. Greg must update.
+- **Swift fill collection TODAY (15 Apr).** 7,500 Heal + 3,654 Remove 500ml. Delivery to 247 ~18-20 Apr. Post-fill: 167d Heal, 297d Remove 500ml cover.
+- **New colour collection stocking out.** 8 launched colours (Orchid, Blossom, Opal, Serenity, etc.) doing 77/d combined. Stock ~700 units each, nothing on order until Aug. Consider adding to CA 21062026.
+- **ACC-LAB-CA: 9,400 on hand (~85d cover).** 8,700 received from Mixam (1,300 short of 10,000 ordered). Investigate with Mixam.
+- **Zakka bubble mailers: payment 18+ days overdue.** Ready since 28 Mar. 3 follow-ups from Zakka unanswered. Joel to pay + confirm delivery address.
+- **CA 21062026 (Birthday Sale) deposit needed by ~22 Apr.** Sally waiting on bottles, B115 jars, deposit.
+- **ACC-REM-BOW model DSR overstated (80/d model vs 18.5/d actual).** Driven by both Remove bundles (BUN-1 + BUN-2). Greg to correct to ~20/d.
 
 ## 🇬🇧 UK — last updated 14 Apr 2026
 - **LIQ-BAS-2 (Base) stocks out ~28 Apr at kit-adjusted rate** — 1,629 units at Fulfillable, 114.4/day kit-adjusted DSR (model shows 22/day standalone only). Chemence fill (8000) dispatches 28 Apr — 0-day margin. Payment due 27 Apr to Joel. CRITICAL.
@@ -32,8 +39,18 @@
 - **Chemence next fill order being placed** — Daniel placing 8000 Base + 8000 Glow "over coming days". 6-8 week lead time confirmed.
 - **Liquipak exiting** — final Remove PO placed (2 Apr). 800L pre-mix for 160d coverage of Remove 120ml/500ml. No replacement filler found despite outreach to 20+ UK fillers.
 
-## 🇸🇪 Nordic — last updated [DATE]
-- (to be populated after first Nordic review)
+## 🇸🇪 Nordic — last updated 14 Apr 2026
+- **ACC-REM (Remove 120ml): 3d cover — OOS imminent.** 29 units at 8.9/d. No GLAMRDiP stock exists. Only Dippi stock remains. Must be on NORDIC 01072026 or sourced locally.
+- **Post-transition demand dropped 35-42%.** Kit DSR went from ~30/d to ~18-20/d (W14-W16). Not confirmed as temporary. Adib's "no drop in sales" claim (31 Mar) contradicted by data. Needs investigation.
+- **ACC-REM-500 (Remove 500ml): 26d cover.** 559 units (Dippi only). No GLAMRDiP stock. Stocks out ~10 May.
+- **LIQ-BAS-2 (Base): 34d cover.** 581 GD units only. Stocks out ~18 May. No local filler in Nordic.
+- **LIQ-HEA-5 (Heal): 46d at kit-adjusted rate.** 1,722 Dippi units only. No local filler. When this runs out (~29 May), kits can't be assembled.
+- **3 popular colours stocking out soon:** Buttercup (9d, 71 units), Bloom (12d, 83 units), Angel Energy (31d, 259 units). All top-15 sellers.
+- **POW-WAV-SU017 stock error: 10,000 instead of 200.** Work order created 9 Mar, uncorrected 5 weeks later. Chase Axel.
+- **POS MODEL non-functional.** No DSR on GD SKUs, no shipment blocks for recent containers, B360 tab empty, no 3PL daily data. Greg needs to rebuild.
+- **NORDIC 03062026 status unknown.** Was planned for 28 Mar placement. No evidence placed. NORDIC 01072026 confirmed in production.
+- **No communication with Shelfless/Axel since 12 Mar.** 1 month silence with 3PL.
+- **Dippi colour clearance: ~690 days at current rate.** ~55,000 units, 80/d combined sales. Needs more aggressive promotion or discount plan.
 
 ## 🌐 General / Cross-Regional
 - CN Raw Goods POs (28-03-2026) — 11 POs posted by Daniel. Sally bottles & Mark jars deposits are top priority. Joel to pay.

@@ -53,3 +53,10 @@
 
 ## Notes
 - Gmail searches for CA: search `Swift OR Abhishek` for filler, `247 OR Zaid` for 3PL, `Mixam` for labels
+
+## Overstocking Flag (as of 15 Apr 2026)
+- **Growth factor was 2.0x but actual demand is 0.66x.** Every container has been ordered at ~3x required quantity. This compounds order over order.
+- Post-container release: ~314 days kit cover vs 45-75 day target. ~13,400 excess kit units at 247.
+- CA 21062026 (Birthday Sale, Jul) adds another 4,396 kits. CA 25072026 (Aug) adds 5,404 more.
+- **At current demand, CA does not need another kit container until 2027.** Future containers should be sized for colours, accessories, and packaging — not kits.
+- Every POS Check should verify actual kit DSR against model and flag if ordering is still based on the inflated growth factor. Target: recalibrate to 0.72x (actual + 10% buffer).

@@ -200,7 +200,29 @@ for f in shiphero_files:
 
 ---
 
-## Step 0b — Kit-Adjusted DSR Validation
+## Step 0b — Growth Factor Health Check
+
+Compare the POS MODEL growth factor against actual 14d kit selling. This is a health check, not a correction — the growth factor is aspirational and tied to marketing/ad spend goals. We generally want to push for it, and would rather have slightly too much stock than not enough given container lead times.
+
+```
+actual_14d_kit_total = sum of 14d Shopify DSR for STA + COM + ULT
+actual_growth = actual_14d_kit_total / model_kit_base_total
+gap = (model_growth - actual_growth) / model_growth × 100
+```
+
+Report:
+- Current growth factor vs actual
+- Gap as a percentage (e.g. "selling 67% below scaled target")
+- Whether the gap is narrowing, stable, or widening vs previous reviews
+- Impact on stock cover: "At model rate: Xd cover. At actual rate: Yd cover."
+
+**Flag if gap > 50% for 4+ consecutive weeks** — this means ordering decisions are significantly disconnected from demand. Don't recommend lowering the growth factor outright, but flag that stock levels will accumulate faster than expected and future container quantities should be reviewed.
+
+Check the region file for any overstocking flags from previous reviews.
+
+---
+
+## Step 0c — Kit-Adjusted DSR Validation
 
 Before proceeding, validate whether the POS MODEL DSR already includes kit consumption for each kit-adjusted item (check `../../Shared/Component Map.md` for the region).
 
@@ -621,6 +643,78 @@ ACC-REM-BOW  1,435   80.0    18d     PAST                PAST             🔴 e
 
 ---
 
+## Step 10c — Cascading Arrival Projection
+
+The key forward-looking view. For each active shipment in sequence, show what the stock position looks like as each one arrives — accounting for consumption between arrivals. This answers: "where are we now, where are we after the next container, and where are we after the one after that?"
+
+### Logic
+
+Order all inbound shipments chronologically by Est. Arrival. For each stage:
+
+```
+Stage 0 (NOW): current confirmed stock → cover at actual DSR
+Stage 1 (after Shipment A arrives):
+    stock_consumed = actual_DSR × days_until_A_arrives
+    remaining = current_stock - stock_consumed
+    post_arrival = remaining + Shipment_A_OL
+    cover = post_arrival / actual_DSR
+Stage 2 (after Shipment B arrives):
+    stock_consumed = actual_DSR × days_between_A_and_B
+    remaining = post_A_stock - stock_consumed
+    post_arrival = remaining + Shipment_B_OL
+    cover = post_arrival / actual_DSR
+...continue for each shipment
+```
+
+### Output
+
+```
+CASCADING ARRIVAL PROJECTION
+
+Target cover: 45-75 days | Actual kit DSR: [X]/d
+
+--- KITS ---
+                     NOW           After [Ref A]       After [Ref B]       After [Ref C]
+                     Stock  Cover   Stock  Cover        Stock  Cover        Stock  Cover
+KIT-STA-2            2,477  167d    4,465  301d  ⚠️     5,199  328d  ⚠️     ...
+KIT-COM-4            3,779  138d    8,567  312d  ⚠️     ...
+KIT-ULT-6              852   82d    3,512  337d  ⚠️     ...
+ALL KITS             7,108  135d   16,544  314d  ⚠️    20,940  370d  ⚠️
+
+--- LIQUIDS / REMOVE / KEY ITEMS ---
+[Same cascading format for items that have inbound]
+
+⚠️ = cover exceeds 100d (potential overstock vs 45-75d target)
+```
+
+### Delay scenario
+
+After the projection table, answer: **"If [next shipment] is delayed, what stocks out?"**
+
+For each SKU, calculate how long current stock (without the next shipment) lasts at actual DSR. If anything stocks out before the shipment after it arrives, flag it:
+
+```
+IF [Ref A] IS DELAYED:
+  KIT-ULT-6: current 852 at 10.4/d → stocks out 82d (5 Jul). [Ref B] arrives 5 Jul — cuts it close.
+  LIQ-SOA-6: current 338 at 4.0/d → stocks out 85d (9 Jul). [Ref B] arrives 5 Jul — OK.
+  All other SKUs: safe until [Ref B].
+```
+
+### Overstock flag
+
+If any SKU exceeds 100d cover after a shipment arrival, flag it with the excess vs target:
+
+```
+OVERSTOCK FLAGS (post-arrival cover > 100d, target 45-75d):
+  KIT-COM-4: 312d cover, +252d over target, +6,923 excess units
+  ACC-REM-BOW: 462d cover, +402d over target, +7,450 excess units
+  → Review future container quantities for these SKUs
+```
+
+This is especially important when the growth factor is aspirational (higher than current actual). Flag the gap: "Model assumes [X]/d. Actual is [Y]/d. If demand doesn't scale to target, these quantities represent [Z] months of excess inventory."
+
+---
+
 ## Graceful Degradation
 
 **If no ShipHero CSVs provided:**
@@ -685,6 +779,9 @@ LOCAL FILL FORECAST
 
 PO RECOMMENDATIONS
   [Step 10b — next PO place dates, raw goods deadlines, flagged items]
+
+CASCADING ARRIVAL PROJECTION
+  [Step 10c — stage-by-stage cover as each shipment arrives, delay scenarios, overstock flags]
 
 FOLLOW-UP ITEMS
   Immediate / By end of month / Ongoing — with checkboxes

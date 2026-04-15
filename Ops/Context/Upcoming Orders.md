@@ -1,4 +1,4 @@
-# Upcoming Orders — last updated 14 Apr 2026
+# Upcoming Orders — last updated 15 Apr 2026
 
 ## 🇦🇺 AUS
 
@@ -22,7 +22,35 @@
 - Greg: update POS MODEL Exp1 status to Delivered/Closed (stale — shows "In Production")
 
 ## 🇨🇦 CA
-- (to be populated)
+
+### Held at Customs
+- **CA 03022026 + CA 07042026** — Combined 40HQ + 24.5cbm. 94,268 units, 104 SKUs. ETA was 2 Apr. **Not paid for customs release.** Joel must action. Once released, ~3-5 days check-in at 247.
+
+### In Production
+- **CA Powder Room (24-03-2026)** — Est. completion 18 Apr. B113 jars confirmed (Joel, 9 Apr). Should be completing now.
+- **CA 21062026 (Birthday Sale)** — Est. completion 7 May (Sally may need more time). Est. arrival 5 Jul. **Deposit needed by ~22 Apr.** Sally waiting on bottles, B115 jars, deposit. Growth factor for this order not set.
+
+### Planned
+- **CA 25072026** — Status: Ordering. Est. completion 22 Jun. Est. arrival 6 Aug. Not yet placed. Contains Fire Collection restock + colours.
+
+### Local Fills
+- **31-01-2026 Swift Innovations** — 7,500 Heal + 3,654 Remove 500ml. COMPLETE. Collection 15 Apr (today). Delivery to 247 ~18-20 Apr. POS MODEL still shows "In Production" — Greg to update.
+- **Next fill: ON HOLD.** Joel said "hold for a little" (9 Apr) due to underselling + cash flow. Post-fill coverage is 167d Heal + 297d Remove 500ml — no urgency.
+
+### Local Printing
+- **04-03-2026 CA Print Order (Mixam labels)** — ACC-LAB-CA. 8,700 of 10,000 received at 247. Automation re-enabled. 1,300 short from Mixam — investigate. POS MODEL still shows "In Production" — Greg to update.
+
+### Pending Supplier Actions
+- **Zakka** — Bubble mailers ready, payment balance outstanding 18+ days. Joel to pay + confirm delivery address to 247.
+- **Mixam** — 1,300 unit shortfall (8,700 vs 10,000). Remy to follow up.
+
+### Pending Actions
+- Joel: Pay customs/duties to release CA 03022026 + CA 07042026
+- Joel: Pay CA 21062026 Birthday Sale deposit (deadline ~22 Apr)
+- Joel: Pay Zakka balance + confirm delivery address
+- Greg: Update POS MODEL growth factor from 2.0x to 0.72x
+- Greg: Update shipment statuses (Swift = Complete, Mixam = Delivered, containers = Held)
+- Greg: Correct ACC-REM-BOW model DSR from 80/d to ~20/d
 
 ## 🇬🇧 UK
 
@@ -42,7 +70,21 @@
 - **B360 Packup** — 288,898 units at old 3PL to transfer to Fulfillable. Timing TBD. Includes 45 OOS colour SKUs, 19,445 STO-BUB-BAG-S, and significant insert/packaging stock.
 
 ## 🇸🇪 Nordic
-- (to be populated)
+
+### In Production
+- **NORDIC 01072026** — In Production (confirmed 14 Apr by user). Est completion/arrival dates unknown — not in POS MODEL. If mid-May completion + 45d vessel = ~early July arrival.
+
+### Arrived (not in POS MODEL)
+- **NORDIC 14012026** — Arrived ~24 Mar. Checked in. GLAMRDiP kits + colours + accessories. Not reflected in POS MODEL shipment blocks.
+
+### Status Unknown
+- **NORDIC 03062026** — Was planned for placement 28 Mar. No evidence it was placed. May have been merged into 01072026 or dropped. Daniel/Joel to confirm urgently.
+
+### Pending Actions
+- Daniel/Joel: Confirm NORDIC 03062026 status
+- Greg: Rebuild Nordic POS MODEL — add GD DSR, shipment blocks, fix B360 tab
+- Remy: Follow up with Axel — stock snapshot, POW-WAV-SU017 correction, all outstanding items
+- Adib: Confirm Nordic insert stock (ACC-LAB, ACC-INS, ACC-THA in all 4 languages)
 
 ## CN Raw Goods POs (28-03-2026)
 11 POs posted by Daniel in #general-inventory:
