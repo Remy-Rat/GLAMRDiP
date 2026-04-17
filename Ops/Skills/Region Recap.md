@@ -82,6 +82,14 @@ Note when each issue was **first raised** and how many summaries it's appeared i
 THE SITUATION RIGHT NOW
   3-5 dot points. What's the headline? What's the main risk? What's going well?
 
+ACTIONS FROM LAST REVIEW — STATUS  ← REQUIRED
+  Pull every action item from the prior Recap + prior POS Check + prior Sales Analysis.
+  For each, mark: ✅ DONE, 🟡 IN PROGRESS / PARTIAL, 🔴 MISSED, ❓ UNCONFIRMED.
+  Include owner and a one-line note on what actually happened (with date evidence).
+  Call out the single action that matters most — "The one that matters: X is N days overdue."
+  Rationale: this is explicit accountability. Without this, open actions go stale across reviews
+  (e.g. a Heal fill PO flagged for 5+ days with no evidence of placement).
+
 WHAT CHANGED SINCE LAST RECAP
   Diff against the last recap or Current Issues. Explicitly state:
   - What's NEW (not in last recap)

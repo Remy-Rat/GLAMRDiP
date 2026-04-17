@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Archive/Region Reviews/CA/POS Checks/2026-04-15 CA POS Check.md",
+                "file": "Archive/Region Reviews/AUS/Recaps/2026-04-17 AUS Recap.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "2026-04-15 CA POS Check"
+              "title": "2026-04-17 AUS Recap"
             }
           }
         ]
@@ -94,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Archive/Region Reviews/CA/POS Checks/2026-04-15 CA POS Check.md",
+                "file": "Archive/Region Reviews/AUS/Recaps/2026-04-17 AUS Recap.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for 2026-04-15 CA POS Check"
+              "title": "Backlinks for 2026-04-17 AUS Recap"
             }
           },
           {
@@ -113,12 +113,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Archive/Region Reviews/CA/POS Checks/2026-04-15 CA POS Check.md",
+                "file": "Archive/Region Reviews/AUS/Recaps/2026-04-17 AUS Recap.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from 2026-04-15 CA POS Check"
+              "title": "Outgoing links from 2026-04-17 AUS Recap"
             }
           },
           {
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Archive/Region Reviews/CA/POS Checks/2026-04-15 CA POS Check.md",
+                "file": "Archive/Region Reviews/AUS/Recaps/2026-04-17 AUS Recap.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of 2026-04-15 CA POS Check"
+              "title": "Outline of 2026-04-17 AUS Recap"
             }
           }
         ]
@@ -186,6 +186,10 @@
   },
   "active": "7b3e98c6e06f5fd0",
   "lastOpenFiles": [
+    "Archive/Region Reviews/AUS/Sales Analysis/2026-04-17 AUS Sales Analysis.md",
+    "Archive/Region Reviews/AUS/POS Checks/2026-04-17 AUS POS Check.md",
+    "Archive/Region Reviews/AUS/Recaps/2026-04-17 AUS Recap.md",
+    "Archive/Region Reviews/CA/POS Checks/2026-04-15 CA POS Check.md",
     "Archive/Region Reviews/AUS/POS Checks/2026-04-16 AUS POS Check.md",
     "Archive/Region Reviews/UK/POS Checks/2026-04-14 UK POS Check.md",
     "Archive/Region Reviews/UK/Recaps/2026-04-14 UK Recap.md",
@@ -200,7 +204,6 @@
     "Ops/Skills/Sales Performance.md",
     "Ops/Context/Current Issues.md",
     "Archive/Region Reviews/UK/Sales Analysis/2026-04-15.md",
-    "Archive/Region Reviews/CA/POS Checks/2026-04-15 CA POS Check.md",
     "Archive/Region Reviews/CA/Recaps/2026-04-15 CA Recap.md",
     "Archive/Region Reviews/CA/Recaps/2026-04-14 CA Recap.md",
     "Archive/Region Reviews/CA/Sales Analysis/2026-04-15 CA Sales Analysis.md",
@@ -218,9 +221,6 @@
     "Ops/Scripts/deductions.py",
     "Ops/Scripts/dsr.py",
     "Ops/Scripts/extract.py",
-    "Ops/Scripts",
-    "Ops/CLAUDE.md",
-    "Ops/Skills/POS Model Check.md",
-    "Ops/Context/Upcoming Orders.md"
+    "Ops/Scripts"
   ]
 }

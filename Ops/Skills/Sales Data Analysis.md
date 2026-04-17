@@ -9,6 +9,8 @@ User asks for sales analysis, sell-through analysis, inventory trend check, stoc
 
 ## Data Sources (all from the Order Schedule xlsx)
 
+**Always re-pull the xlsx at the start of every Sales Analysis.** Never reuse a prior extract, even from the same day — the SHOPIFY tab updates on +1d lag, the 3PL tab updates daily, and POS MODEL may be re-pasted. Using stale data silently degrades the analysis.
+
 ### Important: Data Source for DSR Calculations
 All DSR calculations use the **SHOPIFY tab raw data** directly (7d/14d/30d windows from the most recent date). Do NOT use the SALES tab — its date range is manually set and may be stale or set to a non-standard period. The SALES tab is ignored for this analysis.
 
@@ -264,32 +266,73 @@ For each detected arrival, show: date, SKU count, total units, top 5 SKUs, and w
 
 ---
 
-## Step 5 — Inventory Discrepancy Detection
+## Step 5 — Inventory Discrepancy Detection (Red Flag Investigation)
 
-Scan 3PL data for anomalous single-day movements over last 45 days. This is the accountability step — "Shopify says we sold X, 3PL deducted Y, where's the gap?"
+This is the accountability step — "Shopify says we sold X, 3PL deducted Y, where's the gap?" Don't just **list** red flags — **investigate and classify each**. A flagged deduction is a hypothesis, not a finding.
 
-Use the red flag thresholds from `../Context/Deduction Benchmarks.md`. These are per-SKU daily deduction limits — if a single day's deduction exceeds the benchmark, flag it. All colours (POW-*) and stickers (ACC-STI-*) use 30.
+### 5A — Single-day flag investigation
 
-Group output into these categories:
+For every red flag the extract produces (single-day deduction > benchmark from `../Context/Deduction Benchmarks.md`):
 
-### Stock Losses (raise with 3PL)
-3PL stock decreased more than Shopify sales explain. These are the "where did our stock go?" items. Sort by absolute gap (largest first). For each:
-- Show date, SKU, 3PL decrease, Shopify sales that day, unexplained gap
-- This is the list to send to the 3PL to investigate
+1. **Pull same-day Shopify sales** for that SKU. If ~0 and 3PL is 1,000+, it's not a sales event.
+2. **Pull 15-day window Shopify sales** around the date — establish the normal rate. A 1,000-unit 3PL spike with 5-10/d Shopify either side = a one-off event, not a trend.
+3. **Classify** each flag into one of these buckets:
 
-### Stock Gains (likely reconciliation or check-in)
-3PL stock increased outside of a detected container arrival. Usually means:
-- **Reconciliation** — 3PL found stock during a count (check RECONCILIATION tab)
-- **Ongoing check-in** — container still being processed across multiple days (check if near a container arrival date)
+| Class | Pattern | Action |
+|---|---|---|
+| **Explained — OP fill transfer** | SKU is `ACC-RE5-*`, `ACC-RE1-*`, `HEA-EMP/LID/BSH`, and a local fill PO was active on or near that date | Note and suppress from escalation. Cross-check that the OP delivery came back (close the loop). |
+| **Explained — bundle event** | SKU moves with a same-day spike in LIQ-SET / ACC-REM-BUN-1 / ACC-REM-BUN-2 | Check bundle volume — explains gaps of ~4-30/d, not 1,000+/d |
+| **Explained — kit swap / backorder clearing** | KIT-* deductions spike by 2-3x benchmark on a known backorder-clearing day (check Slack for that date) | Note and contextualise |
+| **Explained — reconciliation** | RECONCILIATION tab shows entry on that date for that SKU, OR known transition shortfall (e.g. Greg's B360 packup investigation) | Note and cross-reference Greg's email thread |
+| **⚠️ Unexplained** | Shopify near-zero, no bundle pairing, no OP transfer, no reconciliation entry — just a single big spike | **Escalate to G3PL** with date + SKU + quantity |
+
+### 5B — Cumulative gap test (the high-value integrity check)
+
+Run this independently from the single-day flag test. For every SKU (focus on colours since they have no bundle/kit leakage):
+
+```
+tpl_30d = avg_daily_deduction × 30
+shop_30d = sum(Shopify units, last 30 days)
+gap = tpl_30d - shop_30d
+
+Flag if gap > 300 units for colours, or > 500 for kits/liquids
+```
+
+A single-day flag with 14 days of normal activity either side might still *look* suspicious but not actually represent missing stock. The **cumulative** view tells you whether the SKU's inventory account is actually short.
+
+Typical output shape:
+
+```
+COLOUR SKU — UNEXPLAINED CUMULATIVE GAPS (3PL > Shopify by 30d)
+
+SKU              3PL 30d   Shop 30d    Gap     Spike Date    Spike Units
+POW-ENE-484        3,798        23   3,775    16 Apr          1,001
+POW-DRE-771        3,657       318   3,339    08 Apr          1,113
+...
+TOTAL                                22,090 units unexplained
+
+  → Each SKU's gap traces to ONE single-day spike while normal days show 5-10/d
+  → Pattern suggests stock adjustments or write-offs, not sales
+  → Action: request G3PL explanation for each spike
+```
+
+### 5C — Stock Gains (likely reconciliation or check-in)
+
+3PL stock **increased** outside a detected container arrival:
+- **Reconciliation** — 3PL found stock during a count (cross-check RECONCILIATION tab)
+- **Ongoing check-in** — container still being processed across multiple days
 - **Returns** — customer returns checked back in
 
-Note the likely cause but don't alarm — these are usually positive.
+Note likely cause; don't alarm — these are usually positive.
 
-### Container-Aligned
-Expected increases from container check-ins. Just count them.
+### 5D — Component Transfers (expected, don't alarm)
 
-### Component Transfers
-Component SKUs (HEA-EMP, HEA-LID, HEA-BSH, ACC-RE1-*, ACC-RE5-*) going to 0 = shipped to local filler. Expected — don't alarm.
+Component SKUs going to 0 or big single-day drops when a local fill PO is active:
+- **ACC-RE5-BOT / INN / LID** → OP for Remove 500ml fill
+- **ACC-RE1-BOT / INN / LID** → OP for Remove 120ml fill
+- **HEA-EMP / LID / BSH** → OP for Heal fill
+
+These are transfers to the filler, not lost stock. The component reappears ~28-35 days later as the finished SKU (LIQ-HEA-5, ACC-REM-500, ACC-REM).
 
 ---
 

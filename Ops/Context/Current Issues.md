@@ -1,20 +1,26 @@
-# Current Issues — last updated 16 Apr 2026
+# Current Issues — last updated 17 Apr 2026
 
-## 🇦🇺 AUS — last updated 16 Apr 2026
-- **ACC-LAB (Labels Booklet) at 15d cover, stocks out ~1 May. NO INBOUND.** 3,563 units, 241.8/day deduction. Compliance-critical. Avi Printing PO placed 24 Mar — no delivery confirmation in 23 days. Chase immediately.
-- **LIQ-BAS-2 (Base) stocks out ~10 May (30d rate: 29.6/day — 14d rate depressed by OOS).** 725 units. AUS 09052026 +2,592 arriving ~30 May → **20d OOS gap.** No local fill option. Express from Sally or redirect from another region only options.
-- **KIT-STA-2 (Starter) stocks out ~22 May.** 1,319 units, 35.7/day actual. AUS 09052026 arriving ~30 May → 8d gap. Swap to COM/ULT if needed.
-- **AUS 09052026 on track for 30 Apr completion.** B114 jars finishing ~20 Apr. Sally needs 10 days. Est arrival ~30 May (standard). 5 SKUs stock out before arrival: STA, Base, Glow, LO Base, Remove Bowls.
-- **Heal fill PO needs placing this week.** 10,998 units at 146.4/day → 75d. No inbound on any container. Recommended: 10,000 units to OP.
-- **Growth factor gap: 1.3x model vs 0.85x actual.** Selling 35% below scaled target (124.3/day actual vs 191.1 scaled). Marginally improved from 0.83x last review. COM/ULT accumulating overstock (145d and 160d post all containers).
-- **7 Fire Collection colours: 0 Shopify sales in 14d.** 105-238 units each. If demand is real at 6.5/d, all stock out May-Jun with no restock until AUS 08072026 (15 Jul). Verify listing status.
-- **OP Remove 500ml fill: all ingredients at OP.** Peter planning fill this week. Delivery to G3PL ~9 May. 5,000 units. POS MODEL dates stale — Greg to update.
-- **Blue Moon (POW-BLU-ZGD22): OOS on website, 514 units at G3PL.** Re-enable listing.
+## 🇦🇺 AUS — last updated 17 Apr 2026
+- **🔴 Heal fill PO 4 days overdue.** Place today with OP. **Recommended 15,000 units** (58d lead: 21d ingredients + 30d fill + 7d ship). At 1.3x projected 184.6/d, arrival buffer is 1 day — every day delayed erodes it.
+- **🔴 LIQ-BAS-2 (Base): 702 units, 28d cover (3PL) / 23d (Shop 30d) → stocks out 10-15 May.** AUS 09052026 arrives ~30 May → **15-20d OOS gap.** No local fill. Sally express via Lily only bridge.
+- **🔴 22,090 units of colour stock show unexplained 3PL deductions** (7 SKUs, single-day ~1,000-unit spikes 19 Mar–16 Apr): POW-ENE-484 (-3,775, spiked yesterday), POW-DRE-771, POW-ROY-304, POW-JUS-449, POW-GOL-597, POW-BRE-109, POW-CRE-217. Separate from Greg's already-identified ~1,200 B360 colour shortfall. Request G3PL explanation.
+- **🔴 ACC-REM-500: 22d cover at real 3PL rate (168/d), not 37d model rate (99/d).** 107/d unexplained over-deduction vs Shopify+bundles (~3,200 units/month). OP fill arrives 9 May with zero buffer. If Peter slips 2+ days, brief OOS.
+- **AUS 08072026 fill PO due 29 Apr (12 days).** Critical gaps: **NO ACC-LAB, NO ACC-THA.** Recommend adding ACC-THA 20,000 to container, plan separate Avi ACC-LAB PO (~20,000 units) by mid-May. Also trim COM -1,500 / ULT -600 (running at 0.86x actual).
+- **B360 transfer stock shortfall.** Greg flagged 16 Apr: ACC-THA -11,200, ACC-CUT-PRE -1,100, 5 colours (Charming, Frisky, Sincere, Rustle, Stellar) -1,200 combined. **Sincere (top seller) -400.** Katrina responding by EOD Fri 18 Apr.
+- **ACC-LAB now 18,344 units on hand** (post Avi PO 11 check-in 16 Apr). At 3PL 245/d = 75d cover, stocks out ~1 Jul. 08072026 has no ACC-LAB — need new Avi PO placed ~15 May.
+- **AUS 09052026 on track, 30 Apr completion.** B114 jars finishing 20 Apr. Confirm with Lily WeChat this week. Any slip = begin Base/STA/Bowl express conversation immediately.
+- **ShipHero product name sync corrupting Shopify names.** Enabled 13 Apr, flagged 16 Apr. Daniel + Jake mid-solution, unresolved. Customer-visible risk.
+- **Growth factor gap sustained at 0.86x vs 1.3x (8+ weeks).** W15 recovered to 135/d but W16 (partial, 4d) at 104/d **despite 35% Easter sale live** — kit selling weak. Bundles + colours lifting instead (LIQ-SET +44%, multiple colours +30-60%). Possible mix-shift: revenue may hold via bundles while kit count dips.
+- **Blue Moon (POW-BLU-ZGD22): OOS on website, 514 at G3PL.** Demand collapsed 64%. Relist.
+- **Goddess (POW-GOD-017): 3,495 units, 14d demand collapsed 59% (19→8/d).** Investigate listing + marketing.
+- **7 Fire Collection colours zero sales 14d confirmed.** Verify Shopify listing status.
 
 ### Resolved since last update:
-- ✅ AUS 07062026 (Birthday Sale) deposit paid (was stalled 2+ weeks)
-- ✅ Acetone received at Outsource Packaging (Peter confirmed 15 Apr)
-- ✅ All ingredients for OP Remove 500ml fill now at OP
+- ✅ Avi PO 11 ACC-LAB received at G3PL (16 Apr, 18,344 on hand post check-in)
+- ✅ POs 5 & 6 fully closed at G3PL — ACC-JAR 5,645 located via PO 6
+- ✅ AUS 07062026 deposit paid
+- ✅ Acetone received at Outsource Packaging (15 Apr)
+- ✅ All ingredients for OP Remove 500ml fill at OP; Peter filling end of this week
 
 ## 🇨🇦 CA — last updated 15 Apr 2026
 - **CA 03022026 + CA 07042026 container: held at customs, not paid for release.** 94,268 units across 104 SKUs. 13 days past ETA (2 Apr). Joel must pay customs/duties. Once released, ~3-5 days for 247 to check in.

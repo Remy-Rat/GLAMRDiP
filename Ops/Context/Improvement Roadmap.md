@@ -1,4 +1,4 @@
-# Improvement Roadmap — last updated 14 Apr 2026
+# Improvement Roadmap — last updated 17 Apr 2026
 
 ## Completed
 - [x] **Google Drive connection** — gcloud CLI, read-only export of all 4 Order Schedules
@@ -9,9 +9,20 @@
 - [x] **Sales spike/drop detection** — with CRO + sale-announcements channel cross-reference
 - [x] **Stock-out forecasting** — with lead time framework (84/44/30d deadlines)
 - [x] **PO recommendation logic** — in POS Check skill (Step 10)
+- [x] **Actions-from-last-review tracker** — required section in Recap (17 Apr 2026) — surfaces stale/missed action items across reviews
+- [x] **Red flag deduction investigation methodology** — classify each flag as Explained / Unexplained in Sales Analysis; added cumulative 3PL-vs-Shopify gap test
+- [x] **Dual-DSR stock coverage view** — model (1.3x) / 3PL actual / Shopify 30d shown side-by-side in POS Check
+- [x] **Container gap analysis** — explicit "what's missing from in-flight containers" step in POS Check
+- [x] **Local fill sizing formula** — explicit lead-time + growth-factor math with lean/recommended/conservative options
+- [x] **Manual override convention** — surface deltas between POS MODEL sheet and known same-day events (Gmail/Slack) at top of POS Check
+- [x] **Step 0a Gmail reconcile in POS Check** — mandatory step before cover math (17 Apr 2026) — catches POS MODEL paste-time vs evening-event lag
+- [x] **`/full-review` pause discipline** — mandatory pauses between phases with 3-finding + 4-question template (17 Apr 2026). Prevents stale data cascading downstream.
+- [x] **"Always re-pull xlsx" rule** — explicit in POS Check + Sales Analysis data sources (17 Apr 2026)
 
 ## Priority 1 — Next up
-- [ ] **Standalone analysis script** — write `analysis.py` in this repo. Pre-generates POS Check + Sales Analysis data. Claude still reviews, interprets, and adds Slack/Gmail context on top. Best of both: speed + judgement.
+- [ ] **Supplier scorecard** — track promised vs actual lead times per supplier (Avi, Peter/OP, Sally, Chemence, Mixam, Zakka). File at `Ops/Context/Supplier Scorecard.md`. Update each review. Gives leverage in conversations and catches chronic slippers.
+- [ ] **CX health panel in weekly cycle** — pull orders >48hr, returns in progress, customs/tracking failures from #glamrdip-g3pl / #glamrdip-ca-247 / equivalent. Currently invisible in reports despite being real customer risk.
+- [ ] **Standalone analysis script** — write `analysis.py` in this repo. Pre-generates POS Check + Sales Analysis data. Claude still reviews, interprets, and adds Slack/Gmail context on top.
 - [ ] **Scheduled runs** — script runs on review schedule (Mon=AUS, Tue=UK, Wed=CA, Fri=Nordic). Data ready when Remy starts the review. Recap still done interactively.
 
 ## Priority 2 — When 3PL transitions settle (2-4 weeks)

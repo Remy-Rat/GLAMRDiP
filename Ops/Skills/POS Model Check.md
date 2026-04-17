@@ -10,6 +10,8 @@ User asks for a stock position check, POS model check, check-in progress, double
 ## Data Sources
 
 ### Order Schedule xlsx (from Google Drive)
+**Always re-pull at the start of every POS Check.** Never reuse a prior extract, even from the same day — Greg updates POS MODEL daily (sometimes multiple times) and the 3PL tab updates independently. A "we already have the data" shortcut produces stale analysis.
+
 Fetch the latest via gcloud:
 ```bash
 TOKEN=$(/opt/homebrew/share/google-cloud-sdk/bin/gcloud auth print-access-token)
@@ -57,6 +59,8 @@ One CSV per active Purchase Order. Export from ShipHero > Purchase Orders > [PO]
 - **Quarantined stock** shows in ShipHero On Hand but NOT in Available. The gap = quarantined + backorder allocated. Look for SKUs with "-QUARANTINED" suffix in PO exports.
 - **Packaging SKUs (STO-\*, ACC-INS, ACC-LAB, ACC-THA) don't sell on Shopify.** Monitor only via 3PL deduction rates.
 - **Bundle sales inflate 3PL deduction rates.** ACC-REM-BUN-1 (120ml + Bowl) and ACC-REM-BUN-2 (500ml + Bowl) sell as bundle SKUs on Shopify, but 3PL deducts the component SKUs individually. LIQ-SET (Liquids Set) deducts 1x of all 6 liquids per sale. If Greg sets POS MODEL DSR from 3PL deduction rates rather than Shopify sales, the model DSR for Remove 500ml, Remove Bowl, and liquids will be overstated. Always compare model DSR against Shopify standalone sales to detect this.
+- **POS MODEL update timing vs same-day events.** The `UPDATED` cell (POS MODEL H9) shows when Greg last pasted data. If Katrina (G3PL) or a supplier confirms an event (PO check-in, stock adjustment) **after** that timestamp, the sheet won't show it. Always check the `UPDATED` time against known same-day Gmail/Slack events and apply **manual overrides** at the top of the analysis (e.g. "ACC-LAB = 18,344 on hand post Avi PO 11 check-in 16 Apr; sheet shows 3,397"). List every manual override up front so the reader sees the deltas.
+- **Growth factor per container.** Different containers can be sized at different growth factors (e.g. AUS 07062026 Birthday Sale at 1.4x, standard at 1.3x). The per-container growth factor lives in each shipment block header (row 7, GROWTH FACTOR column). When projecting post-arrival cover, switch to the container's own growth factor for its landing window, not the global J9 value.
 
 ---
 
@@ -197,6 +201,47 @@ for f in shiphero_files:
             'available': int(row.get('Available', 0)),
         }
 ```
+
+---
+
+## Step 0a — Gmail & Slack Reconcile (do this BEFORE finalising any cover math)
+
+The POS MODEL sheet is pasted by Greg once a day, often in the AM. Events that happen **after** Greg's paste — a 3PL check-in, a supplier confirmation, a stock adjustment — won't be in the sheet until tomorrow. If you run the POS Check straight off the xlsx, you will publish a stale view and potentially a false RED CRITICAL.
+
+**Example that actually happened (16 Apr 2026):** POS MODEL said ACC-LAB = 3,397 units / 15d cover → flagged RED CRITICAL "chase Avi immediately". Same evening Katrina emailed confirming PO 11 (Avi) received = 18,344 on hand, ~75d cover. The critical flag was already resolved.
+
+### Procedure
+
+1. **Read the POS MODEL `UPDATED` cell** (POS MODEL H9 for AUS; equivalent for other regions). Note the date AND time if available. That's your data-cutoff.
+
+2. **Sweep Gmail for the period between `UPDATED` and now** — filter to:
+   - 3PL operations contacts (Katrina, Jake, David for AUS; equivalents per region)
+   - Local fillers (Peter/OP, Chemence, Swift, Oils4Life)
+   - Local printers (Avi, Print Runner, Mixam)
+   - Sally (Isay Nail), Lily (shipping agent)
+   - Greg (stock reconciliation, ASN updates)
+   
+   Query template: `after:YYYY/MM/DD (from:katrina@... OR to:pjoseph@... OR subject:PO OR "received" OR "inbounded" OR "stocked in")`
+
+3. **Sweep Slack** — regional inventory channel + 3PL channel since `UPDATED`. Look for messages from Katrina, David, Peter, Jake, Remy, Daniel, Joel that confirm actions.
+
+4. **Identify manual overrides.** For each event since `UPDATED`, decide whether to override the sheet figure. Examples:
+   - "Katrina: PO 11 Booklet received 16 Apr PM" → ACC-LAB overridden to user-confirmed figure (18,344)
+   - "Greg 16 Apr: ACC-THA -11,200 discrepancy identified" → ACC-THA adjusted down pending Katrina confirmation
+   - "Peter: Acetone received at OP 15 Apr" → OP Remove fill no longer ingredient-blocked
+
+5. **List manual overrides at the top of the POS Check.** Format:
+   ```
+   Manual overrides applied to sheet figures:
+   - ACC-LAB: 18,344 on hand (Avi PO 11 received 16 Apr; sheet shows 3,397 — Greg pasted AM, Katrina booked PM)
+   - ACC-THA: 21,587 (32,787 less Greg-identified 11,200 B360 shortfall; pending Katrina reply Fri 18 Apr)
+   ```
+
+6. **Apply the overrides** to every downstream calculation (cover, windows, container gaps). Don't silently use the sheet value anywhere after this step.
+
+7. **If the user confirmed a figure** (e.g. "18,344 on hand post-Avi"), prefer that figure. Ask before assuming.
+
+This step is mandatory. A POS Check without a Gmail reconcile is a guess.
 
 ---
 
@@ -513,6 +558,108 @@ ACC-REM-BOW     1,435   80.0    in 18d       ⚠️ Past CN PO deadline. Check i
 - **No inbound, under 44d** — even a rush PO won't arrive in time. Express shipment required.
 - **Delayed containers** — use user-provided context (e.g. "duties unpaid") to adjust ETAs. Don't just use the POS MODEL date if it's known to be stale.
 - **Local fills as a safety net** — if a liquid is stocking out and there's a local filler for it (check Region Inventory Config), flag this as an option with the ~28d lead time.
+
+---
+
+## Step 8.5 — Dual-DSR Stock Coverage View
+
+Show cover simultaneously at three rates to expose model vs reality divergence. This is the most important single artefact a reader takes away.
+
+For each critical SKU, compute:
+
+```
+cov_model   = stock / (SKU model DSR × growth factor)
+cov_3pl     = stock / 3PL avg deduction per day (last 14d, excluding arrivals)
+cov_shop30  = stock / Shopify 30d DSR   (where SKU sells standalone)
+```
+
+Present as a single table with all three covers side by side. Call out the divergences explicitly:
+- **All three agree (within 20%)** → trust the number.
+- **Model > 3PL > Shopify** (typical) → model is inflated; 3PL captures reality including bundles/kit consumption.
+- **3PL > Model > Shopify** → the SKU is consumed faster than the model thinks (e.g. ACC-REM-500 at 168/d 3PL vs 99/d model). Real cover is the 3PL view. The model UNDER-states risk on these.
+- **Shopify > 3PL** → typically data lag or a kit/bundle not accounted for. Investigate before acting.
+
+Whichever rate is **fastest** is the cover number that matters operationally. Call it out in the headline cover column.
+
+---
+
+## Step 8.6 — Container Gap Analysis
+
+This is the "what's missing from an in-flight container that we need to flag" step. A container can land on time and still leave you OOS on something that wasn't on it.
+
+For each in-production / planned container, pull its SKU contents from the POS MODEL shipment block (OL > 0). Then for every SKU with a flagged cover gap, ask:
+
+1. **Is this SKU in the next landing container?** If no — and it stocks out in that window — it's a gap.
+2. **Is the OL quantity sufficient** for actual selling through the window *to* the following container? If the container replenishes to 20d cover but the next container is 45 days away, it's a partial gap.
+3. **Where does the SKU come from?** Some SKUs are never in CN containers (ACC-LAB = Avi local print; LIQ-HEA-5 = OP local fill). A "gap" for these means **a local PO needs placing**, not a container change.
+
+Output a per-container gap list:
+
+```
+AUS 08072026 — CRITICAL GAPS (Fill PO due 29 Apr)
+  - ACC-LAB: 0 units. Current 18,344, OOS ~1 Jul, no Avi PO in pipeline.
+    → Place Avi PO ~mid-May for 20,000 units.
+  - ACC-THA: 0 units in container. Post-07062026 cover 20-27d at actual/model rate. Gap of 10d before 08072026.
+    → Add 20,000 ACC-THA to 08072026 OR place a standalone print order.
+  - LIQ-HEA-5: 0 units ready. Entirely dependent on OP fills.
+    → Fill PO must be continuous.
+```
+
+Common SKUs to check specifically: **ACC-LAB, ACC-THA, LIQ-HEA-5, ACC-REM-500**. These have recurring container-gap patterns because they are locally sourced or kit-adjusted.
+
+---
+
+## Step 8.7 — Container Pushback Sensitivity
+
+Only run when there's **evidence of a specific delay** (Slack/Gmail flag, e.g. B114 jars slipping, customs held). Don't stress-test every container blindly.
+
+When a delay is identified:
+1. Model the pushback at the **evidence-based duration** (e.g. "Mark says ~20 days B114" → +14d arrival).
+2. Recompute stockout gaps for every SKU that depends on that container.
+3. Show at **both 1.3x model and actual 0.86x rates** — the user cares about both.
+4. Explicitly list the bridging options: Sally express via Lily, kit swap (STA↔COM precedent), cross-regional redirect (only if user confirms region is in scope), local fill alternative.
+
+---
+
+## Step 9.5 — Local Fill Sizing
+
+When recommending a fill PO quantity (Heal, Remove, etc.), use explicit lead times + projected DSR. Don't hand-wave a round number.
+
+### Inputs
+- **Lead time components** — ask the user or check `../Context/Lead Times.md`. For AUS OP Heal fills: ~21d ingredients + 30d filling + 7d shipping = **58d**. For OP Remove 500ml: shorter (~14d fill + 7d ship if ingredients on hand). Confirm with Peter if uncertain.
+- **Projected DSR** — the POS MODEL growth factor (J9 on POS MODEL tab for AUS). E.g. 1.3x × 147 base kits + standalone Shopify for Heal = **184.6/d**.
+- **Current stock** at the filler SKU.
+- **Next container bringing this SKU** (is any? — for Heal on AUS, usually none).
+
+### Formula
+
+```
+consumption_during_lead = lead_days × projected_DSR
+stock_at_delivery       = current_stock - consumption_during_lead
+target_post_fill_cover  = desired_cover_days × projected_DSR
+fill_qty                = target_post_fill_cover - stock_at_delivery
+```
+
+Pick `desired_cover_days` based on the fill cycle:
+- If next fill will be placed ~lead_days after this one lands, aim for `1.5 × lead_days` post-fill cover (buffer for cycle slip).
+- If you want `2 × lead_days` cover (conservative) — rounds up.
+- If user prefers lean (common), aim for `1.2 × lead_days`.
+
+### Output format
+
+Always show 3 scenarios (lean / recommended / conservative) and both 1.3x projected + actual-rate cover. Let the user decide based on overstock appetite:
+
+```
+Heal fill sizing:
+  Lead: 58d | Projected 184.6/d | Current 10,893 | Stock at delivery: ~186
+
+  Qty        Cov @ 1.3x        Cov @ actual 0.86x
+  12,000         66d                96d        (lean)
+  15,000         83d               121d        (recommended)
+  18,000         99d               144d        (conservative)
+```
+
+Flag if stock at delivery is negative — that means there will be an OOS gap before the fill lands; quote it in days.
 
 ---
 
