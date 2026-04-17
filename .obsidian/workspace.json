@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Archive/Region Reviews/UK/Sales Performance/2026-04-15 UK Sales Performance.md",
+                "file": "Archive/Region Reviews/CA/POS Checks/2026-04-15 CA POS Check.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "2026-04-15 UK Sales Performance"
+              "title": "2026-04-15 CA POS Check"
             }
           }
         ]
@@ -94,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Archive/Region Reviews/UK/Sales Performance/2026-04-15 UK Sales Performance.md",
+                "file": "Archive/Region Reviews/CA/POS Checks/2026-04-15 CA POS Check.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for 2026-04-15 UK Sales Performance"
+              "title": "Backlinks for 2026-04-15 CA POS Check"
             }
           },
           {
@@ -113,12 +113,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Archive/Region Reviews/UK/Sales Performance/2026-04-15 UK Sales Performance.md",
+                "file": "Archive/Region Reviews/CA/POS Checks/2026-04-15 CA POS Check.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from 2026-04-15 UK Sales Performance"
+              "title": "Outgoing links from 2026-04-15 CA POS Check"
             }
           },
           {
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Archive/Region Reviews/UK/Sales Performance/2026-04-15 UK Sales Performance.md",
+                "file": "Archive/Region Reviews/CA/POS Checks/2026-04-15 CA POS Check.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of 2026-04-15 UK Sales Performance"
+              "title": "Outline of 2026-04-15 CA POS Check"
             }
           }
         ]
@@ -186,8 +186,12 @@
   },
   "active": "7b3e98c6e06f5fd0",
   "lastOpenFiles": [
+    "Archive/Region Reviews/AUS/POS Checks/2026-04-16 AUS POS Check.md",
+    "Archive/Region Reviews/UK/POS Checks/2026-04-14 UK POS Check.md",
+    "Archive/Region Reviews/UK/Recaps/2026-04-14 UK Recap.md",
     "Archive/Region Reviews/UK/Sales Analysis/2026-04-15 UK Sales Analysis.md",
     "Archive/Region Reviews/UK/Sales Performance/2026-04-15 UK Sales Performance.md",
+    "Archive/Region Reviews/AUS/POS Checks/2026-04-14 AUS POS Check.md",
     "Archive/Region Reviews/Nordic/Sales Performance",
     "Archive/Region Reviews/CA/Sales Performance",
     "Archive/Region Reviews/UK/Sales Performance",
@@ -201,8 +205,6 @@
     "Archive/Region Reviews/CA/Recaps/2026-04-14 CA Recap.md",
     "Archive/Region Reviews/CA/Sales Analysis/2026-04-15 CA Sales Analysis.md",
     "Archive/Region Reviews/CA/POS Checks/2026-04-15.md",
-    "Archive/Region Reviews/UK/POS Checks/2026-04-14 UK POS Check.md",
-    "Archive/Region Reviews/UK/Recaps/2026-04-14 UK Recap.md",
     "Archive/Region Reviews/CA/Sales Analysis/2026-04-15.md",
     "Archive/Region Reviews/Nordic/POS Checks/2026-04-14 Nordic POS Check.md",
     "Archive/Region Reviews/CA/Recaps/2026-04-15.md",
@@ -210,7 +212,6 @@
     "Archive/Region Reviews/AUS/Sales Analysis/2026-04-14 AUS Sales Analysis.md",
     "Archive/Region Reviews/AUS/Recaps/2026-04-14 AUS Recap.md",
     "Archive/Region Reviews/Nordic/Recaps/2026-04-14 Nordic Recap.md",
-    "Archive/Region Reviews/AUS/POS Checks/2026-04-14 AUS POS Check.md",
     "Archive/Region Reviews/UK/POS Checks/2026-04-14.md",
     "Archive/Region Reviews/UK/Recaps/2026-04-14.md",
     "Ops/Scripts/forecast.py",
@@ -220,7 +221,6 @@
     "Ops/Scripts",
     "Ops/CLAUDE.md",
     "Ops/Skills/POS Model Check.md",
-    "Ops/Context/Upcoming Orders.md",
-    "Archive/Region Reviews/CA/Recaps/2026-04-14.md"
+    "Ops/Context/Upcoming Orders.md"
   ]
 }

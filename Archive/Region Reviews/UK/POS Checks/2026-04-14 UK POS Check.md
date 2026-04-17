@@ -24,17 +24,17 @@ No ShipHero CSVs — using POS MODEL "FULFILLABLE" column as the stock source. B
 - KIT-COM-4 and KIT-ULT-6 comfortable — 110+ days
 
 ### Liquids (Kit-Adjusted)
-| SKU | Fulfillable | Model Cover | Kit-Adj DSR | Kit-Adj Cover | B360 In |
-|---|---:|---:|---:|---:|---:|
-| LIQ-BAS-2 | 1,629 | 74d | 114.4/day | 14d | 32 |
-| LIQ-GLO-4 | 1,608 | 146d | 92.4/day | 17d | 596 |
-| LIQ-HEA-5 | 9,623 | 103d | 93.5/day | 103d | 1,653 |
-| LIQ-SEA-3 | 3,119 | 236d | 13.2/day | 236d | 369 |
-| LIQ-BON-1 | 635 | 115d | 5.5/day | 115d | 194 |
-| LIQ-MAT-4 | 847 | 128d | 6.6/day | 128d | 469 |
-| LIQ-SOA-6 | 639 | 116d | 5.5/day | 116d | 588 |
-| LIQ-SEN-2 | 0 | OOS | — | — | 0 |
-| LIQ-SEN-4 | 0 | OOS | — | — | 0 |
+| SKU       | Fulfillable | Model Cover | Kit-Adj DSR | Kit-Adj Cover | B360 In |
+| --------- | ----------: | ----------: | ----------: | ------------: | ------: |
+| LIQ-BAS-2 |       1,629 |         74d |   114.4/day |           14d |      32 |
+| LIQ-GLO-4 |       1,608 |        146d |    92.4/day |           17d |     596 |
+| LIQ-HEA-5 |       9,623 |        103d |    93.5/day |          103d |   1,653 |
+| LIQ-SEA-3 |       3,119 |        236d |    13.2/day |          236d |     369 |
+| LIQ-BON-1 |         635 |        115d |     5.5/day |          115d |     194 |
+| LIQ-MAT-4 |         847 |        128d |     6.6/day |          128d |     469 |
+| LIQ-SOA-6 |         639 |        116d |     5.5/day |          116d |     588 |
+| LIQ-SEN-2 |           0 |         OOS |           — |             — |       0 |
+| LIQ-SEN-4 |           0 |         OOS |           — |             — |       0 |
 
 Base and Glow model DSR is understated. Fulfillable confirmed (13 Apr) they are picking Base + Glow + Heal per kit via automation rules. B360 did NOT do this — those liquids were inside the CN kit. Now that Fulfillable picks them, demand jumps from standalone (22/day Base, 11/day Glow) to kit-adjusted (114.4/day Base, 92.4/day Glow).
 

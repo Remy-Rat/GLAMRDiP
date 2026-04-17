@@ -17,11 +17,11 @@ Running without ShipHero data. Using POS MODEL G3PL ON HAND as the stock figure.
 
 ### Kits
 
-| SKU | Product | G3PL OH | Model DSR | Cover (Model) | 3PL Actual DSR | Cover (Actual) |
-|---|---|---:|---:|---:|---:|---:|
-| KIT-STA-2 | Starter Kit | 1,371 | 44.2/d | 31d | 37.6/d | 36d |
-| KIT-COM-4 | Complete Kit | 5,265 | 101.4/d | 52d | 64.2/d | 82d |
-| KIT-ULT-6 | Ultimate Kit | 3,012 | 45.5/d | 66d | 24.2/d | 124d |
+| SKU       | Product      | G3PL OH | Model DSR | Cover (Model) | 3PL Actual DSR | Cover (Actual) |
+| --------- | ------------ | ------: | --------: | ------------: | -------------: | -------------: |
+| KIT-STA-2 | Starter Kit  |   1,371 |    44.2/d |           31d |         37.6/d |            36d |
+| KIT-COM-4 | Complete Kit |   5,265 |   101.4/d |           52d |         64.2/d |            82d |
+| KIT-ULT-6 | Ultimate Kit |   3,012 |    45.5/d |           66d |         24.2/d |           124d |
 
 - STA most at-risk. Actual selling below model but still lowest cover.
 - COM and ULT comfortable — actual selling significantly below model (37% and 47% respectively).
@@ -29,17 +29,17 @@ Running without ShipHero data. Using POS MODEL G3PL ON HAND as the stock figure.
 
 ### Liquids
 
-| SKU | Product | G3PL OH | Model DSR | Cover (Model) | 3PL Actual DSR | Cover (Actual) | Kit-Adj? |
-|---|---|---:|---:|---:|---:|---:|---|
-| LIQ-HEA-5 | Heal | 11,204 | 184.6/d | 61d | 132.7/d | 84d | Yes |
-| LIQ-BAS-2 | Base | 784 | 53.3/d | 15d | 21.6/d | 36d | No |
-| LIQ-SEN-2 | Low Odour Base | 135 | 9.1/d | 15d | 2.8/d | 48d | No |
-| LIQ-GLO-4 | Glow | 951 | 26.0/d | 37d | 22.5/d | 42d | No |
-| LIQ-SEN-4 | Low Odour Glow | 205 | 7.8/d | 26d | 2.0/d | 103d | No |
-| LIQ-SEA-3 | Seal | 2,647 | 44.2/d | 60d | 23.2/d | 114d | No |
-| LIQ-BON-1 | Bond | 1,400 | 16.9/d | 83d | 8.2/d | 171d | No |
-| LIQ-MAT-4 | Matte | 1,998 | 10.4/d | 192d | — | — | No |
-| LIQ-SOA-6 | Soak | 678 | 13.0/d | 52d | — | — | No |
+| SKU       | Product        | G3PL OH | Model DSR | Cover (Model) | 3PL Actual DSR | Cover (Actual) | Kit-Adj? |
+| --------- | -------------- | ------: | --------: | ------------: | -------------: | -------------: | -------- |
+| LIQ-HEA-5 | Heal           |  11,204 |   184.6/d |           61d |        132.7/d |            84d | Yes      |
+| LIQ-BAS-2 | Base           |     784 |    53.3/d |           15d |         21.6/d |            36d | No       |
+| LIQ-SEN-2 | Low Odour Base |     135 |     9.1/d |           15d |          2.8/d |            48d | No       |
+| LIQ-GLO-4 | Glow           |     951 |    26.0/d |           37d |         22.5/d |            42d | No       |
+| LIQ-SEN-4 | Low Odour Glow |     205 |     7.8/d |           26d |          2.0/d |           103d | No       |
+| LIQ-SEA-3 | Seal           |   2,647 |    44.2/d |           60d |         23.2/d |           114d | No       |
+| LIQ-BON-1 | Bond           |   1,400 |    16.9/d |           83d |          8.2/d |           171d | No       |
+| LIQ-MAT-4 | Matte          |   1,998 |    10.4/d |          192d |              — |              — | No       |
+| LIQ-SOA-6 | Soak           |     678 |    13.0/d |           52d |              — |              — | No       |
 
 - **Base at 15d model cover is the #1 liquid risk.** Even at actual DSR (36d), it stocks out before AUS 09052026.
 - Heal looks healthy at 61-84d but needs a new fill PO this week.
@@ -47,14 +47,14 @@ Running without ShipHero data. Using POS MODEL G3PL ON HAND as the stock figure.
 
 ### Accessories & Remove Products
 
-| SKU | Product | G3PL OH | Model DSR | Cover (Model) | 3PL Actual DSR | Cover (Actual) |
-|---|---|---:|---:|---:|---:|---:|
-| ACC-LAB | Labels Booklet | 3,896 | 364.2/d | 11d | 227.6/d | 17d |
-| ACC-REM-BOW | Remove Bowl | 1,677 | 75.5/d | 22d | 40.8/d | 41d |
-| ACC-NAI-WIP | Lint-Free Wipes | 265 | 6.5/d | 41d | — | — |
-| ACC-REM-500 | Remove 500ml | 3,824 | 98.8/d | 39d | 62.7/d | 61d |
-| ACC-REM | Remove 120ml | 7,722 | 33.8/d | 229d | 25.8/d | 299d |
-| ACC-PRO-DRI | Pro Drill | 417 | 9.1/d | 46d | — | — |
+| SKU         | Product         | G3PL OH | Model DSR | Cover (Model) | 3PL Actual DSR | Cover (Actual) |
+| ----------- | --------------- | ------: | --------: | ------------: | -------------: | -------------: |
+| ACC-LAB     | Labels Booklet  |   3,896 |   364.2/d |           11d |        227.6/d |            17d |
+| ACC-REM-BOW | Remove Bowl     |   1,677 |    75.5/d |           22d |         40.8/d |            41d |
+| ACC-NAI-WIP | Lint-Free Wipes |     265 |     6.5/d |           41d |              — |              — |
+| ACC-REM-500 | Remove 500ml    |   3,824 |    98.8/d |           39d |         62.7/d |            61d |
+| ACC-REM     | Remove 120ml    |   7,722 |    33.8/d |          229d |         25.8/d |           299d |
+| ACC-PRO-DRI | Pro Drill       |     417 |     9.1/d |           46d |              — |              — |
 
 - **ACC-LAB at 11-17d is the most critical non-kit item.** No ACC-LAB on any upcoming container. Labels must be reordered immediately.
 

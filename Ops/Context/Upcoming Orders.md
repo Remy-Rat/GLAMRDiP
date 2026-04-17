@@ -12,14 +12,16 @@
 - **Container #5 (unnamed)** — Raw PO 6 May, Fill PO 5 Jun, est completion 15 Jul, est arrival 14 Aug.
 
 ### Local Fills
-- **OP Remove 500ml Fill (24-03-2026)** — All ingredients at Outsource Packaging by ~15 Apr. Calcium Chloride ✅, Coconut Oil + Vitamin E ✅ (13 Apr), Acetone ✅ dispatched 13 Apr (consignment 70928013, ETA OP ~15 Apr). **28 day fill → delivery to G3PL ~13 May.** 5,000 units.
-- **Heal Fill — needs placing this week.** 11,204 on hand (84d at actual rate). Not urgent but flagged in 13 Apr summary. ~28d lead time from placement.
+- **OP Remove 500ml Fill (24-03-2026)** — All ingredients confirmed at OP (acetone received 15 Apr). Peter planning fill this week (17-18 Apr). 14d filling + 7d delivery. **Delivery to G3PL ~8-9 May.** 5,000 units. POS MODEL dates stale (shows completion 14 Apr / arrival 19 Apr — should be ~1 May / ~9 May).
+- **Heal Fill — needs placing this week.** 10,998 on hand (75d at 3PL rate, 146.4/d). No inbound from any container. Recommended: 10,000 units. ~28d lead time from placement → delivery ~14-16 May.
 
 ### Pending Actions
-- Joel: B113 vs B114 jars decision (unblocks AUS 09052026 + Powder Room)
-- Joel: AUS 07062026 deposit
-- Order ACC-LAB from Avi Printing — 17d cover, nothing on any container
-- Greg: update POS MODEL Exp1 status to Delivered/Closed (stale — shows "In Production")
+- Joel: B114 jars finishing ~20 Apr → AUS 09052026 completion ~30 Apr (on track)
+- ~~Joel: AUS 07062026 deposit~~ ✅ Paid
+- Chase Avi Printing for ACC-LAB delivery — 15d cover, stocks out ~1 May
+- Place Heal fill PO with Outsource Packaging this week (~10,000 units)
+- Greg: update POS MODEL Exp 2 dates (OP Remove 500ml: completion ~1 May, arrival ~9 May)
+- Greg: review AUS 08072026 kit quantities (COM/ULT overstocked, STA undersupplied)
 
 ## 🇨🇦 CA
 

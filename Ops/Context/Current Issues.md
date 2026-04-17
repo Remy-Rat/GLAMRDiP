@@ -1,23 +1,20 @@
-# Current Issues — last updated 15 Apr 2026
+# Current Issues — last updated 16 Apr 2026
 
-## 🇦🇺 AUS — last updated 14 Apr 2026
-- **ACC-LAB (Labels Booklet) at 17d cover, NO INBOUND on any container.** 3,896 units, 227.6/day deduction rate. Compliance-critical — cannot ship without them. Must order from Avi Printing immediately.
-- **LIQ-BAS-2 (Base) stocks out ~late April.** 784 units, 16.6/day Shopify (model overstated at 53.3). No local fill option in AUS. AUS 09052026 not arriving until late May/June. Express from Sally or redirect from another region needed.
-- **KIT-STA-2 (Starter) stocks out ~mid-May.** 1,371 units, 35.3/day Shopify. AUS 09052026 arriving late May/June — 14-30d gap. Swap to COM/ULT if needed (used before 27 Mar).
-- **AUS 09052026 delayed to mid-May completion** — B114 jar approval with Mark. Joel deciding B113 vs B114. Est arrival: early-mid June (16d express / 30d standard). This pushes stockouts for STA, Base, LO Base, LO Glow, Remove Bowls, Wipes.
-- **AUS 07062026 (Birthday Sale) deposit not paid** — 2+ weeks stalled. Est completion 8 May, est arrival 7 Jun. Growth factor 1.4x.
-- **Growth factor overstated: 1.3x model vs 0.83x actual.** Selling 36.5% below scaled target (121.4/day actual vs 191.1 scaled). Recommended recalibration to 0.91x. Every ordering decision currently based on inflated demand.
-- **PO 10 Heal count discrepancy** — 7,700 received of 9,000. Katrina recounting. 1,300 units unaccounted for.
-- **7 Fire Collection colours stock out before AUS 08072026 (8 Jul).** 105-238 units each, 16-37d cover. Consider adding to AUS 09052026 or accept gap.
-- **3 colours need website action:** Blue Moon (OOS on site but has G3PL stock), Goddess (demand collapsed 87% — check listing), Bubbly (demand collapsed 90%).
+## 🇦🇺 AUS — last updated 16 Apr 2026
+- **ACC-LAB (Labels Booklet) at 15d cover, stocks out ~1 May. NO INBOUND.** 3,563 units, 241.8/day deduction. Compliance-critical. Avi Printing PO placed 24 Mar — no delivery confirmation in 23 days. Chase immediately.
+- **LIQ-BAS-2 (Base) stocks out ~10 May (30d rate: 29.6/day — 14d rate depressed by OOS).** 725 units. AUS 09052026 +2,592 arriving ~30 May → **20d OOS gap.** No local fill option. Express from Sally or redirect from another region only options.
+- **KIT-STA-2 (Starter) stocks out ~22 May.** 1,319 units, 35.7/day actual. AUS 09052026 arriving ~30 May → 8d gap. Swap to COM/ULT if needed.
+- **AUS 09052026 on track for 30 Apr completion.** B114 jars finishing ~20 Apr. Sally needs 10 days. Est arrival ~30 May (standard). 5 SKUs stock out before arrival: STA, Base, Glow, LO Base, Remove Bowls.
+- **Heal fill PO needs placing this week.** 10,998 units at 146.4/day → 75d. No inbound on any container. Recommended: 10,000 units to OP.
+- **Growth factor gap: 1.3x model vs 0.85x actual.** Selling 35% below scaled target (124.3/day actual vs 191.1 scaled). Marginally improved from 0.83x last review. COM/ULT accumulating overstock (145d and 160d post all containers).
+- **7 Fire Collection colours: 0 Shopify sales in 14d.** 105-238 units each. If demand is real at 6.5/d, all stock out May-Jun with no restock until AUS 08072026 (15 Jul). Verify listing status.
+- **OP Remove 500ml fill: all ingredients at OP.** Peter planning fill this week. Delivery to G3PL ~9 May. 5,000 units. POS MODEL dates stale — Greg to update.
+- **Blue Moon (POW-BLU-ZGD22): OOS on website, 514 units at G3PL.** Re-enable listing.
 
 ### Resolved since last update:
-- ✅ POW-CLE-193 (Clear) fully restocked — 39,068 units after PO 5/6 closure
-- ✅ G3PL PO 5 & 6 closed 13 Apr — stock inbounded, first clean data snapshot
-- ✅ Stock synch enabled at G3PL (Katrina confirmed 13 Apr)
-- ✅ Acetone dispatched from Sydney Solvents 13 Apr, arriving OP ~15 Apr
-- ✅ Coconut Oil + Vitamin E received at Outsource Packaging 13 Apr
-- ✅ Previous OP fill (PO 25-02-2026) delivered to G3PL, POD confirmed 9 Apr
+- ✅ AUS 07062026 (Birthday Sale) deposit paid (was stalled 2+ weeks)
+- ✅ Acetone received at Outsource Packaging (Peter confirmed 15 Apr)
+- ✅ All ingredients for OP Remove 500ml fill now at OP
 
 ## 🇨🇦 CA — last updated 15 Apr 2026
 - **CA 03022026 + CA 07042026 container: held at customs, not paid for release.** 94,268 units across 104 SKUs. 13 days past ETA (2 Apr). Joel must pay customs/duties. Once released, ~3-5 days for 247 to check in.
