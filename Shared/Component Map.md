@@ -4,14 +4,14 @@
 
 Kits arrive from Sally (Isay Nail) **pre-assembled** with liquids and accessories. The 3PL then adds locally-filled items, customer's colour choice, and inserts before shipping.
 
-| Component inside kit from China | SKU           | Starter | Complete | Ultimate |
-| ------------------------------- | ------------- | ------- | -------- | -------- |
-| Deluxe Brush                    | ACC-BRU       | 1       | 1        | 1        |
-| Cuticle Presser                 | ACC-CUT-PRE   | 1       | 1        | 1        |
-| Base                            | LIQ-BAS-2     | 1       | 1        | 1        |
-| Seal                            | LIQ-SEA-3     | 1       | 1        | 1        |
-| Bond                            | LIQ-BON-1     | 1       | 1        | 1        |
-| Glow                            | LIQ-GLO-4     | 1       | 1        | 1        |
+| Component inside kit from China | SKU         | Starter | Complete | Ultimate |
+| ------------------------------- | ----------- | ------- | -------- | -------- |
+| Deluxe Brush                    | ACC-BRU     | 1       | 1        | 1        |
+| Cuticle Presser                 | ACC-CUT-PRE | 1       | 1        | 1        |
+| Base                            | LIQ-BAS-2   | 1       | 1        | 1        |
+| Seal                            | LIQ-SEA-3   | 1       | 1        | 1        |
+| Bond                            | LIQ-BON-1   | 1       | 1        | 1        |
+| Glow                            | LIQ-GLO-4   | 1       | 1        | 1        |
 
 Sensitive Base (LIQ-SEN-2) and Sensitive Glow (LIQ-SOA-6) are sold separately — not included in any kit.
 

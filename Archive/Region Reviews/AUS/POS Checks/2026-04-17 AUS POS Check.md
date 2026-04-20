@@ -309,11 +309,11 @@ B114 jars are the identified bottleneck. Sally completion is tracking 30 Apr at 
 
 **Projected consumption (1.3x):** 184.6/d (from DSR 142 × 1.3)
 
-| Scenario | Quantity | Post-fill cover @ 1.3x | Post-fill cover @ actual 0.86x |
-|---|---:|---:|---:|
-| Lean | 12,000 | 66d | 96d |
-| **Recommended** | **15,000** | **83d** | **121d** |
-| Conservative | 18,000 | 99d | 144d |
+| Scenario        |   Quantity | Post-fill cover @ 1.3x | Post-fill cover @ actual 0.86x |
+| --------------- | ---------: | ---------------------: | -----------------------------: |
+| Lean            |     12,000 |                    66d |                            96d |
+| **Recommended** | **15,000** |                **83d** |                       **121d** |
+| Conservative    |     18,000 |                    99d |                           144d |
 
 **Math (at 15,000 recommended):**
 - Current stock: 10,893

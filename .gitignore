@@ -1,1 +1,19 @@
+# macOS
 .DS_Store
+
+# Excel lock files (auto-created when a workbook is open)
+~$*.xlsx
+~$*.xls
+
+# Obsidian local state — changes constantly with UI interaction
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/graph.json
+
+# Python
+__pycache__/
+*.pyc
+
+# Service account keys / credentials — never commit these
+*-sa.json
+*credentials*.json

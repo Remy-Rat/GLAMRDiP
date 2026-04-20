@@ -68,13 +68,24 @@ DEDUCTION_BENCHMARKS = {
 COLOUR_BENCHMARK = 35
 
 
+import os
+
+# Service account to impersonate for sheet access. Set GLAMRDIP_SA_EMAIL=""
+# to fall back to the user's own gcloud credentials.
+SA_EMAIL = os.environ.get(
+    "GLAMRDIP_SA_EMAIL",
+    "glamrdip-ops@glamrdip-ops-vault.iam.gserviceaccount.com",
+)
+GCLOUD_BIN = os.environ.get("GCLOUD_BIN", "/opt/homebrew/share/google-cloud-sdk/bin/gcloud")
+
+
 def download_xlsx(region):
     sheet_id = SHEET_IDS[region]
     out_path = f"/tmp/{region.lower()}_order_schedule.xlsx"
-    token = subprocess.check_output(
-        ["/opt/homebrew/share/google-cloud-sdk/bin/gcloud", "auth", "print-access-token"],
-        text=True,
-    ).strip()
+    cmd = [GCLOUD_BIN, "auth", "print-access-token"]
+    if SA_EMAIL:
+        cmd.append(f"--impersonate-service-account={SA_EMAIL}")
+    token = subprocess.check_output(cmd, text=True).strip()
     subprocess.run(
         [
             "curl", "-s",

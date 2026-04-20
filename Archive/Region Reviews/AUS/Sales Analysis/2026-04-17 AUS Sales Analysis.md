@@ -143,16 +143,16 @@ Each bundle sale triggers multiple SKU deductions at G3PL — explains most liqu
 
 ### Liquids & Remove — Gap vs Expected
 
-| SKU | 3PL Ded/d | Shop 14d | Bundle Contrib | Expected | Actual Gap | Status |
-|---|---:|---:|---:|---:|---:|---|
-| LIQ-BAS-2 | 24.9 | 18.1 | +4.4 (LIQ-SET) | 22.5 | +2.4 | Reasonable |
-| LIQ-GLO-4 | 22.4 | 13.9 | +4.4 | 18.3 | +4.1 | Reasonable |
-| LIQ-SEA-3 | 25.2 | 18.9 | +4.4 | 23.3 | +1.9 | Aligned |
-| LIQ-BON-1 | 9.2 | 7.7 | +4.4 | 12.1 | -2.9 | Aligned |
-| LIQ-HEA-5 | 148.5 | 2.8 | kit-adj +125.8 | 128.6 | +19.9 | Reasonable (kits + OP transfer activity) |
-| ACC-REM | 26.3 | 12.8 | +10.0 (BUN-1) | 22.8 | +3.5 | Aligned |
-| **ACC-REM-500** | **167.9** | **33.3** | **+27.9 (BUN-2)** | **61.2** | **+106.7** | 🔴 **LARGE UNEXPLAINED GAP** |
-| ACC-REM-BOW | 45.5 | 3.9 | +37.9 (BUN-1+2) | 41.8 | +3.7 | Aligned |
+| SKU             | 3PL Ded/d | Shop 14d |    Bundle Contrib | Expected | Actual Gap | Status                                   |
+| --------------- | --------: | -------: | ----------------: | -------: | ---------: | ---------------------------------------- |
+| LIQ-BAS-2       |      24.9 |     18.1 |    +4.4 (LIQ-SET) |     22.5 |       +2.4 | Reasonable                               |
+| LIQ-GLO-4       |      22.4 |     13.9 |              +4.4 |     18.3 |       +4.1 | Reasonable                               |
+| LIQ-SEA-3       |      25.2 |     18.9 |              +4.4 |     23.3 |       +1.9 | Aligned                                  |
+| LIQ-BON-1       |       9.2 |      7.7 |              +4.4 |     12.1 |       -2.9 | Aligned                                  |
+| LIQ-HEA-5       |     148.5 |      2.8 |    kit-adj +125.8 |    128.6 |      +19.9 | Reasonable (kits + OP transfer activity) |
+| ACC-REM         |      26.3 |     12.8 |     +10.0 (BUN-1) |     22.8 |       +3.5 | Aligned                                  |
+| **ACC-REM-500** | **167.9** | **33.3** | **+27.9 (BUN-2)** | **61.2** | **+106.7** | 🔴 **LARGE UNEXPLAINED GAP**             |
+| ACC-REM-BOW     |      45.5 |      3.9 |   +37.9 (BUN-1+2) |     41.8 |       +3.7 | Aligned                                  |
 
 **ACC-REM-500: ~107 units/day over-deduction unexplained by Shopify + bundles.** Over 30 days that's ~3,200 units potentially missing or mis-deducted.
 - Single-day spike on 4 Apr: **1,041 deduction** (Shopify 59). 
