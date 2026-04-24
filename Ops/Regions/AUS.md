@@ -9,7 +9,7 @@
 - **Labels SKU:** `ACC-LAB`
 - **Kit-adjusted items:** LIQ-HEA-5 (Heal), ACC-INS (Instructions) — filled/picked locally per kit
 - **3PL-supplied packaging:** None — all packaging tracked in G3PL
-- **ShipHero available:** Yes — export PO CSVs for check-in tracking
+- **ShipHero available:** Yes, but NOT used routinely — AUS 3GPL tab in Order Schedule is the live stock position. Export PO CSVs only for partial container check-in reconciliation.
 - **Local fillers:** Outsource Packaging (Heal, Remove 120ml, Remove 500ml)
 
 ---

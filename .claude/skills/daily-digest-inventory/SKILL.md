@@ -1,6 +1,6 @@
 ---
 name: daily-digest-inventory
-description: Post the daily inventory digest to Slack #daily-digest-inventory (C0AT34JKHL7) — 4 separate posts, one per region (AUS, UK, CA, Nordic), each with a qualitative summary, kits projected vs selling, Shopify vs DSR anomalies, Shopify vs 3PL deduction breaches, and action points.
+description: Post the daily inventory digest to Slack #daily-digest-inventory (C0AT34JKHL7) — 4 separate posts, one per region (AUS, UK, CA, Nordic), each with kits projected vs selling, Shopify vs DSR anomalies, Shopify vs 3PL deduction breaches, and action points.
 ---
 
 ## Daily Digest — Inventory
@@ -15,8 +15,6 @@ Audience: Remy, Daniel, Greg.
 ─── divider ───
 **[ordinal] [Mon] [YYYY] - DAILY DIGEST · [flag] [REGION]**
 
-[1-3 sentence qualitative summary of what's happening in the region]
-
 **Kits:** projecting **X/d**, selling **Y/d** (±N% vs projection)
 
 **`Shopify vs DSR`**
@@ -26,8 +24,12 @@ Audience: Remy, Daniel, Greg.
 • [3PL deduction breaches last 3d] OR • None.
 
 **`Action Points`**
-• [Action]. Owner: **Name**.
+• `[new]` [Action].
+• `[ongoing]` [Action carried over from yesterday].
 ```
+
+`[new]` vs `[ongoing]` is auto-derived by substring-matching today's actions
+against yesterday's action texts. See step 5 below.
 
 ### Procedure
 
@@ -44,7 +46,7 @@ Audience: Remy, Daniel, Greg.
    uv run --with pandas,openpyxl python3 Ops/Scripts/extract.py Nordic > /tmp/digest_nordic.json
    ```
 
-3. **Gather qualitative signals per region** — one subagent per region in parallel.
+3. **Gather action points per region** — one subagent per region in parallel.
    Each subagent reads:
    - Region's `#*-inventory` Slack channel (last ~14 days)
    - Region's 3PL channel where applicable (AUS: `#glamrdip-g3pl`, CA: `#glamrdip-ca-247`)
@@ -58,48 +60,54 @@ Audience: Remy, Daniel, Greg.
 
    Each subagent must return a compact JSON object:
    ```json
-   {
-     "summary": "1-3 sentences, specific (numbers/names/dates), skip routine CX traffic",
-     "actions": [{"text": "Specific action", "owner": "Name"}]
-   }
+   { "actions": ["Specific action", "Another action"] }
    ```
 
-   Cap actions at 4 per region. Summary <50 words. Each action <25 words.
-   If a region is genuinely quiet, return an empty `actions` array and a brief "quiet" summary.
+   Cap actions at 4 per region. Each action <25 words. Action points are things
+   that still need to be done — drop anything already in flight (see
+   `feedback_action_points_in_progress.md`).
+   If a region is genuinely quiet, return an empty `actions` array.
 
    Subagent prompt template lives in `Ops/Skills/Daily Digest Inventory.md`.
 
-4. **Write the qualitative input JSON** to `/tmp/qualitative.json`:
+4. **Write the qualitative input JSON** to `/tmp/qualitative.json` (flat list of
+   action strings per region):
    ```json
    {
-     "AUS": { "summary": "...", "actions": [...] },
-     "UK":  { "summary": "...", "actions": [...] },
-     "CA":  { "summary": "...", "actions": [...] },
-     "Nordic": { "summary": "...", "actions": [...] }
+     "AUS": ["action 1", "action 2"],
+     "UK":  ["..."],
+     "CA":  ["..."],
+     "Nordic": []
    }
    ```
 
-5. **Read yesterday's posts in `C0AT34JKHL7` and their thread replies** to identify actions that were marked done/in progress. The pattern:
+5. **Read yesterday's posts in `C0AT34JKHL7` and their thread replies** to (a) identify actions marked done/in-progress and (b) build the prior-action list for `[new]` vs `[ongoing]` tagging. The pattern:
    - `slack_read_channel(C0AT34JKHL7, oldest=<24h ago>)` → finds yesterday's 4 region posts (look for the divider line and `DAILY DIGEST` header).
    - For each of those 4 posts, `slack_read_thread(channel_id=C0AT34JKHL7, message_ts=<post_ts>)` → reads thread replies.
-   - For each region, identify which of *today's* drafted action items have been claimed as done in yesterday's thread. Look for patterns like "actioned", "done", "✅", "complete", "in progress", explicit references to the action's content.
-   - Build `/tmp/completed.json`:
+   - **Completed items** — for each region, identify which of *today's* drafted action items have been claimed as done/in-flight in yesterday's thread (patterns: "actioned", "done", "✅", "complete", "in progress", explicit references to the action's content). Per `feedback_action_points_in_progress.md`, in-flight investigations also go here (suppressed, not tagged ongoing).
+   - **Prior actions** — extract every action bullet from yesterday's post body (ignoring thread), strip the leading `[new]`/`[ongoing]` tag if present, and write 5-8 word distinctive substrings. These will tag any matching today-action as `[ongoing]`.
+   - Build `/tmp/completed.json` and `/tmp/prior_actions.json`:
      ```json
+     // /tmp/completed.json — suppress these from today
      {
-       "AUS": ["short distinctive substring of action 1", "substring of action 2"],
-       "UK":  [],
-       "CA":  ["..."],
-       "Nordic": []
+       "AUS": ["short distinctive substring of done/in-flight item"],
+       "UK":  [], "CA": ["..."], "Nordic": []
+     }
+     // /tmp/prior_actions.json — tag matching today-actions as [ongoing]
+     {
+       "AUS": ["substring of yesterday action 1", "substring of action 2"],
+       "UK":  ["..."], "CA": ["..."], "Nordic": ["..."]
      }
      ```
-     Each substring is matched case-insensitively against today's action `text`. Keep entries short and distinctive — 5-8 words is enough.
-   - If yesterday is the first run (no prior digest), skip this step (use empty `{}` or omit `--completed`).
+     Both use case-insensitive substring match. Keep entries short and distinctive.
+   - If yesterday is the first run (no prior digest), skip this step (omit both `--completed` and `--prior`).
 
 6. **Build the digest posts:**
    ```bash
    python3 Ops/Scripts/daily_digest.py \
      --qualitative /tmp/qualitative.json \
      --completed /tmp/completed.json \
+     --prior /tmp/prior_actions.json \
      > /tmp/digest_posts.txt
    ```
 

@@ -13,21 +13,20 @@ Usage:
     # With qualitative input file (JSON keyed by region name):
     python3 Ops/Scripts/daily_digest.py --qualitative /tmp/qualitative.json
 
-    # Filter out actions that yesterday's posts had threads marking them done:
+    # Filter out actions that yesterday's posts had threads marking them done
+    # and tag carryovers as [ongoing] instead of [new]:
     python3 Ops/Scripts/daily_digest.py \\
       --qualitative /tmp/qualitative.json \\
-      --completed /tmp/completed.json
+      --completed /tmp/completed.json \\
+      --prior /tmp/prior_actions.json
 
     # Custom date for backfills:
     python3 Ops/Scripts/daily_digest.py --date 2026-04-20
 
-The qualitative JSON format (one entry per region, optional fields):
+The qualitative JSON format (one entry per region, list of action strings):
     {
-      "AUS": {
-        "summary": "1-3 sentence narrative of what's happening in AUS ops...",
-        "actions": [{"text": "Do X", "owner": "Remy"}, ...]
-      },
-      "UK": { ... },
+      "AUS": ["Do X", "Do Y"],
+      "UK":  ["..."],
       ...
     }
 
@@ -40,6 +39,14 @@ by the caller from yesterday's thread replies):
       ...
     }
 Matching is case-insensitive substring — keep entries short and distinctive.
+
+The prior-actions JSON format mirrors completed.json — one entry per region
+with substrings of yesterday's action text. If today's action matches any, it
+renders as [ongoing]; otherwise [new].
+    {
+      "AUS": ["PO 10 Heal recount", "Heal fill via Outsource"],
+      ...
+    }
 """
 import argparse
 import json
@@ -209,25 +216,23 @@ def build_region(region, flag, path, today):
     }
 
 
-def build_region_post(b, today, qualitative=None):
+def build_region_post(b, today, actions=None, prior_actions=None):
     """Build a self-contained Slack post for one region.
 
-    qualitative (optional): dict with `summary` (str) and/or `actions` (list of
-    {text, owner}). Both omittable independently.
+    actions (optional): list of action strings. Each rendered as a bullet.
+    prior_actions (optional): list of yesterday's action substrings. Any of
+    today's actions containing one of these substrings (case-insensitive) is
+    tagged [ongoing]; everything else is tagged [new]. If prior_actions is None
+    or empty, no tag is added.
     """
-    qualitative = qualitative or {}
-    summary = qualitative.get("summary")
-    actions = qualitative.get("actions") or []
+    actions = actions or []
+    prior_terms = [p.lower() for p in (prior_actions or []) if p]
 
     day = ordinal(today.day)
     title = f"{day} {today.strftime('%b %Y')} - DAILY DIGEST"
     header = f"**{title} · {b['flag']} {b['region']}**"
 
     lines = [DIVIDER, GAP, header, GAP]
-
-    if summary:
-        lines.append(summary)
-        lines.append(GAP)
 
     g = b["groups"]["kits"]
     lines.append(
@@ -267,44 +272,47 @@ def build_region_post(b, today, qualitative=None):
     if actions:
         lines.extend(["", GAP, "**`Action Points`**"])
         for a in actions:
-            owner = a.get("owner", "")
-            owner_str = f" Owner: **{owner}**." if owner else ""
-            text = a["text"].rstrip(".")
-            lines.append(f"• {text}.{owner_str}")
+            text = a.rstrip(".")
+            if prior_terms:
+                tag = "`[ongoing]`" if any(t in a.lower() for t in prior_terms) else "`[new]`"
+                lines.append(f"• {tag} {text}.")
+            else:
+                lines.append(f"• {text}.")
 
     return "\n".join(lines)
 
 
-def filter_completed_actions(qualitative_by_region, completed_by_region):
-    """Drop action items whose text matches any completed-substring for that region.
+def filter_completed_actions(actions_by_region, completed_by_region):
+    """Drop actions whose text matches any completed-substring for that region.
 
-    Substring match is case-insensitive. Returns a NEW qualitative dict — the
-    input is not mutated.
+    Substring match is case-insensitive. Returns a NEW dict — input not mutated.
     """
     if not completed_by_region:
-        return qualitative_by_region
+        return actions_by_region
     out = {}
-    for region, q in qualitative_by_region.items():
+    for region, actions in actions_by_region.items():
         completed_terms = [t.lower() for t in (completed_by_region.get(region) or [])]
-        if not completed_terms or not q.get("actions"):
-            out[region] = q
+        if not completed_terms or not actions:
+            out[region] = actions
             continue
-        kept_actions = []
-        for action in q["actions"]:
-            text_lower = action["text"].lower()
-            if any(term and term in text_lower for term in completed_terms):
-                continue  # marked done in yesterday's thread
-            kept_actions.append(action)
-        out[region] = {**q, "actions": kept_actions}
+        out[region] = [
+            a for a in actions
+            if not any(term and term in a.lower() for term in completed_terms)
+        ]
     return out
 
 
-def build_all_posts(today, qualitative_by_region=None, completed_by_region=None):
-    qualitative_by_region = qualitative_by_region or {}
-    qualitative_by_region = filter_completed_actions(qualitative_by_region, completed_by_region)
+def build_all_posts(today, actions_by_region=None, completed_by_region=None, prior_by_region=None):
+    actions_by_region = actions_by_region or {}
+    prior_by_region = prior_by_region or {}
+    actions_by_region = filter_completed_actions(actions_by_region, completed_by_region)
     blocks = [build_region(r, f, p, today) for r, f, p in REGIONS]
     return [
-        (b["region"], build_region_post(b, today, qualitative_by_region.get(b["region"])))
+        (b["region"], build_region_post(
+            b, today,
+            actions_by_region.get(b["region"]),
+            prior_by_region.get(b["region"]),
+        ))
         for b in blocks
     ]
 
@@ -317,19 +325,26 @@ def main():
                         help="Path to JSON file with per-region summary+actions.")
     parser.add_argument("--completed", type=str, default=None,
                         help="Path to JSON file with per-region completed-action substrings to suppress.")
+    parser.add_argument("--prior", type=str, default=None,
+                        help="Path to JSON file with per-region prior-day action substrings. "
+                             "Actions matching are tagged [ongoing]; the rest [new].")
     args = parser.parse_args()
 
     today = date.fromisoformat(args.date) if args.date else date.today()
-    qualitative = {}
+    actions_by_region = {}
     if args.qualitative:
         with open(args.qualitative) as f:
-            qualitative = json.load(f)
+            actions_by_region = json.load(f)
     completed = {}
     if args.completed:
         with open(args.completed) as f:
             completed = json.load(f)
+    prior = {}
+    if args.prior:
+        with open(args.prior) as f:
+            prior = json.load(f)
 
-    for region, post in build_all_posts(today, qualitative, completed):
+    for region, post in build_all_posts(today, actions_by_region, completed, prior):
         print(f"===== {region} =====")
         print(post)
         print()

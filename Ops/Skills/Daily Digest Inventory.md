@@ -12,8 +12,6 @@ This page is the operator-facing reference. The Claude Code skill spec (the file
 ─── divider (60× U+2500 box-drawing) ───
 **[Nth] [Mon] [YYYY] - DAILY DIGEST · [flag] [REGION]**
 
-[1-3 sentence qualitative summary]
-
 **Kits:** projecting **X/d**, selling **Y/d** (±N% vs projection)
 
 **`Shopify vs DSR`**
@@ -23,8 +21,12 @@ This page is the operator-facing reference. The Claude Code skill spec (the file
 • [3PL deduction breaches last 3d] OR • None.
 
 **`Action Points`**
-• [Action]. Owner: **Name**.
+• `[new]` [Action].
+• `[ongoing]` [Action carried over from yesterday].
 ```
+
+`[new]` vs `[ongoing]` is derived by substring-matching today's actions against
+yesterday's action list (see pipeline step 5).
 
 Each post stands alone — no parent post, no thread. Top divider only (no bottom) so the channel reads cleanly without `Sent using @Claude` footers leading.
 
@@ -45,34 +47,37 @@ Each post stands alone — no parent post, no thread. Top divider only (no botto
    uv run --with pandas,openpyxl python3 Ops/Scripts/extract.py Nordic > /tmp/digest_nordic.json
    ```
 
-3. **Subagent per region (parallel)** — gather qualitative summary + action points from Slack chats and Gmail (last 14 days).
+3. **Subagent per region (parallel)** — gather action points from Slack chats and Gmail (last 14 days).
 
-4. **Write `/tmp/qualitative.json`** keyed by region name:
+4. **Write `/tmp/qualitative.json`** keyed by region name (flat list of action strings):
    ```json
    {
-     "AUS": { "summary": "...", "actions": [{"text": "...", "owner": "..."}] },
-     "UK":  { ... },
-     "CA":  { ... },
-     "Nordic": { ... }
-   }
-   ```
-
-5. **Read yesterday's digest posts and their threads** in `C0AT34JKHL7`. For each region's post, look at the thread replies for items marked actioned/done/in progress, and write `/tmp/completed.json` with short substrings of any of today's actions that should be suppressed:
-   ```json
-   {
-     "AUS": ["jar transfer from G3PL to Outsource", "B360 final check-in"],
-     "UK":  [],
-     "CA":  ["Mixam on missing 1,300pcs"],
+     "AUS": ["action 1", "action 2"],
+     "UK":  ["..."],
+     "CA":  ["..."],
      "Nordic": []
    }
    ```
-   Substring match is case-insensitive against `action.text`. Skip this step on the very first run.
+
+5. **Read yesterday's digest posts and their threads** in `C0AT34JKHL7`. For each region's post:
+   - Thread replies marking items actioned/done/in-flight → write short substrings to `/tmp/completed.json` (suppressed from today).
+   - Yesterday's action bullets (from the post body, not thread) → write short substrings to `/tmp/prior_actions.json`. Any of today's actions that substring-match become `[ongoing]`; others become `[new]`.
+
+   ```json
+   // /tmp/completed.json
+   { "AUS": ["jar transfer from G3PL"], "UK": [], "CA": ["Mixam 1,300pcs booklet"], "Nordic": [] }
+
+   // /tmp/prior_actions.json
+   { "AUS": ["Heal local fill", "Katrina recount"], "UK": ["Chemence payment"], "CA": ["Zakka bubble mailers"], "Nordic": ["Paragon receipt"] }
+   ```
+   Both use case-insensitive substring match. Skip both files on the very first run.
 
 6. **Build messages:**
    ```bash
    python3 Ops/Scripts/daily_digest.py \
      --qualitative /tmp/qualitative.json \
-     --completed /tmp/completed.json
+     --completed /tmp/completed.json \
+     --prior /tmp/prior_actions.json
    ```
 
 7. **Post to Slack** — `slack_send_message` 4 times (AUS → UK → CA → Nordic) to channel `C0AT34JKHL7`.
@@ -94,7 +99,7 @@ Each post stands alone — no parent post, no thread. Top divider only (no botto
 
 Each parallel agent gets a prompt like this (substitute region-specific bits):
 
-> You're producing a qualitative summary for the **[REGION]** region of GLAMRDiP for a daily inventory Slack digest. Today is **[YYYY-MM-DD]**.
+> You're producing action points for the **[REGION]** region of GLAMRDiP for a daily inventory Slack digest. Today is **[YYYY-MM-DD]**.
 >
 > Read the following sources, focusing on the LAST 14 DAYS:
 > 1. Slack channel `[INVENTORY_CHANNEL_ID]` — use `mcp__claude_ai_Slack__slack_read_channel` with `limit: 50` and `response_format: "concise"`. If too large, paginate.
@@ -105,9 +110,9 @@ Each parallel agent gets a prompt like this (substitute region-specific bits):
 >
 > Return ONLY a compact JSON object:
 > ```json
-> { "summary": "...", "actions": [{"text": "...", "owner": "..."}] }
+> { "actions": ["Specific action 1", "Specific action 2"] }
 > ```
-> Cap actions at 4. Summary <50 words. Each action <25 words. Output only the JSON.
+> Cap actions at 4. Each action <25 words. Action points are only things that still need to be done — drop anything already in flight. Output only the JSON.
 
 ---
 

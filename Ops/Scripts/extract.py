@@ -152,6 +152,16 @@ def parse_pos_model(file_path):
             pos_header_row = r
             break
 
+    # Nordic-only: Dippi combined-stock columns sit between GD stock and backorder.
+    # AUS/UK/CA: col 10 = BACKORDER.
+    # Nordic:   col 10 = D SKU, 11 = D STOCK, 12 = D DAYS COVER, 13 = COMBINED DAYS COVER, 14 = BACKORDER.
+    has_dippi = False
+    backorder_col = 10
+    if pos_header_row is not None:
+        if str(pos_raw.iloc[pos_header_row, 11]).strip() == "D STOCK":
+            has_dippi = True
+            backorder_col = 14
+
     # Shipment blocks — scan header rows for "Our Reference" labels
     shipments = []
     if pos_header_row:
@@ -196,7 +206,7 @@ def parse_pos_model(file_path):
             name = str(pos_raw.iloc[r, 0]).strip()
             stock = pd.to_numeric(pos_raw.iloc[r, 7], errors="coerce")
             days_cover = pd.to_numeric(pos_raw.iloc[r, 8], errors="coerce")
-            backorder = pd.to_numeric(pos_raw.iloc[r, 10], errors="coerce")
+            backorder = pd.to_numeric(pos_raw.iloc[r, backorder_col], errors="coerce")
             model_rate = float(stock / days_cover) if pd.notna(stock) and pd.notna(days_cover) and days_cover > 0 else 0
 
             # For kits, use scaled DSR
@@ -221,6 +231,13 @@ def parse_pos_model(file_path):
                 "backorder": int(backorder) if pd.notna(backorder) and backorder != 0 else 0,
                 "inbound": ol_by_shipment,
             }
+            if has_dippi:
+                d_stock = pd.to_numeric(pos_raw.iloc[r, 11], errors="coerce")
+                d_days_cover = pd.to_numeric(pos_raw.iloc[r, 12], errors="coerce")
+                combined_days_cover = pd.to_numeric(pos_raw.iloc[r, 13], errors="coerce")
+                prod["d_stock"] = int(d_stock) if pd.notna(d_stock) else 0
+                prod["d_days_cover"] = round(float(d_days_cover), 1) if pd.notna(d_days_cover) else None
+                prod["combined_days_cover"] = round(float(combined_days_cover), 1) if pd.notna(combined_days_cover) else None
             products.append(prod)
 
     return {

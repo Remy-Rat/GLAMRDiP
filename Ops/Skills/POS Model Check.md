@@ -39,13 +39,14 @@ Sheet IDs are stored in the memory file `reference_google_drive_sheets.md`.
 - **RECONCILIATION** — book-in data with discrepancies
 - **CNTR TRACKER** — inactive, do not use. Shipment dates and statuses come from the POS MODEL header blocks (Est. Completion, Est. Arrival, Order Status per shipment column group).
 
-### ShipHero PO CSVs (user exports on demand)
-One CSV per active Purchase Order. Export from ShipHero > Purchase Orders > [PO] > Export CSV.
+### ShipHero PO CSVs (FALLBACK ONLY — not routine)
+Don't prompt for these by default. The 3PL tab in the Order Schedule (AUS 3GPL, B360, etc.) is the live stock position. ShipHero CSVs are only useful when a container is **half checked-in** and we need to reconcile confirmed vs pending per SKU — a rare scenario. If the user explicitly provides CSVs or asks to reconcile a partial check-in, fall back to the Step 2/3 workflow for that specific container.
+
+CSV columns, for reference:
 - **Quantity** — expected on the PO
 - **Quantity Received** — checked in so far
-- **On Hand** — current total stock (warehouse-level, same across all PO exports)
+- **On Hand** — current total stock (warehouse-level)
 - **Available** — on hand minus backorders/allocated
-- If user doesn't provide these, prompt: "To run the full POS Check, I need ShipHero PO exports for each active PO. Which POs are currently active?"
 
 ### External Sources
 - **Slack** — regional inventory channel + 3PL channel for container/order context
@@ -293,28 +294,26 @@ Cross-reference with B360/3PL deduction data where available — if the 3PL was 
 
 ## Step 1 — Stock Position
 
-The core deliverable. For every SKU, produce a three-way split:
+The core deliverable. For every SKU with stock > 0 or model DSR > 0, show stock and TWO cover numbers side by side:
 
-- **Confirmed Available** = ShipHero `Available`. This is stock physically in the warehouse, not quarantined, not allocated. Use this for days cover.
-- **Quarantined / Allocated** = ShipHero `On Hand` minus `Available`. Includes damaged goods, quality holds, backorder allocations. Flag if significant.
-- **Pending Inbound** = `Quantity` minus `Quantity Received` across all active POs for this SKU. Stock at the 3PL but not yet scanned in, or still in transit.
-
-Compare against POS MODEL ON HAND:
-- **Delta** = (Available + Pending Inbound) minus POS MODEL ON HAND
-- Negative delta = stock unaccounted for
-- Positive delta = POS MODEL understated or check-in happened but model not updated
+- **Projected DSR** = POS MODEL SKU DSR × growth factor (the aspirational rate we order against)
+- **Actual DSR** = 3PL 14d deduction rate (excludes container arrival days). This captures true demand including bundles + kit consumption.
+  - Fall back to **Shopify DSR** for SKUs where the 3PL rate is corrupted by a known anomaly (mystery deduction spikes, stock adjustments). Mark these with a caret (^) or similar.
+  - Use the actual-DSR cover as the operational number — projected is the ambition target.
 
 Output:
 ```
 STOCK POSITION — [REGION] — [Date]
 
-SKU              Available  Quarantined  Pending In  POS MODEL OH  Delta
-KIT-STA-2          1,204            0        800          2,004       0
-LIQ-HEA-5           568           42        500          1,068     -42
-LIQ-BAS-2           135          864          0            568    +431 ← QUARANTINED explains gap
+SKU              Stock   Projected DSR  Cover @ Projected  Actual DSR  Cover @ Actual
+KIT-STA-2        1,165        44.2            26d             30.8         38d
+LIQ-BAS-2          604        53.3            11d             20.7         29d
+LIQ-HEA-5       10,449       184.6            57d            123.7         84d
 ```
 
-Show all SKUs with stock > 0 or model DSR > 0. Group by category: Kits, Liquids, Colours (top 15), Accessories, Packaging/Inserts.
+Group by category: Kits, Liquids, Remove products, Inserts / packaging, Colours (only flag the ones with anomaly-driven divergence or critical cover). Don't dump 150+ colour rows — call out exceptions.
+
+**Don't include a third column for model-alone or Shopify-alone rates** — keep to the two-cover format. If a rate substitution is needed (e.g. 3PL corrupted), annotate inline, don't add a column.
 
 ---
 
@@ -862,17 +861,14 @@ This is especially important when the growth factor is aspirational (higher than
 
 ---
 
-## Graceful Degradation
+## Partial Check-In Mode (ShipHero CSVs)
 
-**If no ShipHero CSVs provided:**
-- Skip Steps 2-3 (check-in progress and double-count detection)
-- Step 1 uses POS MODEL ON HAND instead of ShipHero Available (no confirmed/pending split)
-- Step 4 uses POS MODEL ON HAND for days cover
-- Flag prominently: "Running without ShipHero data — stock position is based on POS MODEL only. Confirmed vs pending split not available."
+Only relevant when a container is actively mid-check-in and we need to reconcile confirmed vs pending per SKU. In this mode only:
+- User provides ShipHero CSV exports per active PO
+- Run Steps 2 and 3 (check-in progress + double-count detection)
+- Show confirmed / pending / quarantined split in Step 1
 
-**If region doesn't use ShipHero:**
-- Same degradation as above
-- Note which 3PL system the region uses and whether equivalent PO data is available
+Outside of that scenario, use the 3PL tab as the stock position and skip Steps 2 and 3.
 
 **If region is mid-3PL transition:**
 - Two 3PLs may be active. Stock at old 3PL = pending transfer, not sellable until physically moved.
