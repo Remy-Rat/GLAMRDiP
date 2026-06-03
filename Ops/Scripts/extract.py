@@ -397,7 +397,7 @@ def parse_shopify(file_path, region="AUS"):
 
     sku_dsr = {}
     for sku in all_skus:
-        sku_dsr[sku] = {"7d": dsr(sku, 7), "14d": dsr(sku, 14), "30d": dsr(sku, 30)}
+        sku_dsr[sku] = {"1d": dsr(sku, 1), "7d": dsr(sku, 7), "14d": dsr(sku, 14), "30d": dsr(sku, 30)}
 
     # Weekly kit trend (last 9 weeks)
     # Include all kit SKU variants (D- prefix, -UNIT suffix)

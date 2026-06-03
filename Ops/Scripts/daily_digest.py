@@ -47,6 +47,15 @@ renders as [ongoing]; otherwise [new].
       "AUS": ["PO 10 Heal recount", "Heal fill via Outsource"],
       ...
     }
+
+The explained-skus JSON format — SKUs with a thread explanation (OOS etc.).
+Rendered as "OOS day N" instead of "day N without sales":
+    { "UK": ["POW-COT-030"], "AUS": [], ... }
+
+The streaks JSON format — per-region per-SKU day counter. Caller parses
+yesterday's post body for "day N" markers and passes N+1 for still-flagged
+SKUs, 1 (or absent) for new ones:
+    { "UK": {"POW-COT-030": 5}, "AUS": {}, ... }
 """
 import argparse
 import json
@@ -141,12 +150,14 @@ def model_dsr_lookup(products):
     return {p["sku"]: (p.get("model_dsr") or 0) for p in products}
 
 
-def build_region(region, flag, path, today):
+def build_region(region, flag, path, today, explained_skus=None, streaks=None):
     with open(path) as f:
         d = json.load(f)
     sku_dsr = d["shopify"]["sku_dsr"]
     products = d["pos_model"]["products"]
     red_flags = (d.get("tpl") or {}).get("red_flags", [])
+    explained = set(explained_skus or [])
+    streaks = streaks or {}
 
     model = model_dsr_lookup(products)
 
@@ -187,15 +198,17 @@ def build_region(region, flag, path, today):
         s7 = dsr.get("7d", 0) or 0
         s30 = dsr.get("30d", 0) or 0
         proj = model.get(sku, 0)
+        streak = int(streaks.get(sku, 1) or 1)
 
         if proj >= MIN_PROJECTED_FOR_OVER and s7 >= proj * OVER_MULTIPLIER:
             over_selling.append({
                 "sku": sku, "name": friendly_name(sku, products),
-                "s7": s7, "proj": proj, "ratio": s7 / proj,
+                "s7": s7, "proj": proj, "ratio": s7 / proj, "streak": streak,
             })
         if s7 == 0 and s30 >= DEAD_30D_MIN:
             dead.append({
                 "sku": sku, "name": friendly_name(sku, products), "s30": s30,
+                "streak": streak, "explained": sku in explained,
             })
 
     over_selling.sort(key=lambda x: x["ratio"], reverse=True)
@@ -246,12 +259,13 @@ def build_region_post(b, today, actions=None, prior_actions=None):
         for o in b["over_selling"]:
             lines.append(
                 f"• **{o['sku']} ({o['name']}):** selling **{round(o['s7'],1)}/d** vs projected "
-                f"**{round(o['proj'],1)}/d** ({o['ratio']:.1f}x over) - check for spike or store issue."
+                f"**{round(o['proj'],1)}/d** ({o['ratio']:.1f}x over) - day {o['streak']} above projection."
             )
         for dd in b["dead"]:
+            suffix = f"OOS day {dd['streak']}" if dd["explained"] else f"day {dd['streak']} without sales"
             lines.append(
                 f"• **{dd['sku']} ({dd['name']}):** **0 sales** in last 7d "
-                f"(30d avg {round(dd['s30'],1)}/d) - possible listing/stock issue."
+                f"(30d avg {round(dd['s30'],1)}/d) - {suffix}."
             )
     else:
         lines.append("• None.")
@@ -271,13 +285,13 @@ def build_region_post(b, today, actions=None, prior_actions=None):
 
     if actions:
         lines.extend(["", GAP, "**`Action Points`**"])
-        for a in actions:
+        for i, a in enumerate(actions, start=1):
             text = a.rstrip(".")
             if prior_terms:
                 tag = "`[ongoing]`" if any(t in a.lower() for t in prior_terms) else "`[new]`"
-                lines.append(f"• {tag} {text}.")
+                lines.append(f"{i}. {tag} {text}.")
             else:
-                lines.append(f"• {text}.")
+                lines.append(f"{i}. {text}.")
 
     return "\n".join(lines)
 
@@ -302,11 +316,13 @@ def filter_completed_actions(actions_by_region, completed_by_region):
     return out
 
 
-def build_all_posts(today, actions_by_region=None, completed_by_region=None, prior_by_region=None):
+def build_all_posts(today, actions_by_region=None, completed_by_region=None, prior_by_region=None, explained_by_region=None, streaks_by_region=None):
     actions_by_region = actions_by_region or {}
     prior_by_region = prior_by_region or {}
+    explained_by_region = explained_by_region or {}
+    streaks_by_region = streaks_by_region or {}
     actions_by_region = filter_completed_actions(actions_by_region, completed_by_region)
-    blocks = [build_region(r, f, p, today) for r, f, p in REGIONS]
+    blocks = [build_region(r, f, p, today, explained_by_region.get(r), streaks_by_region.get(r)) for r, f, p in REGIONS]
     return [
         (b["region"], build_region_post(
             b, today,
@@ -328,6 +344,14 @@ def main():
     parser.add_argument("--prior", type=str, default=None,
                         help="Path to JSON file with per-region prior-day action substrings. "
                              "Actions matching are tagged [ongoing]; the rest [new].")
+    parser.add_argument("--explained-skus", type=str, default=None,
+                        help="Path to JSON file with per-region SKU lists explained as OOS "
+                             "in yesterday's thread. Render as 'OOS day N' instead of "
+                             "'day N without sales'. Format: {\"UK\": [\"POW-COT-030\"], ...}")
+    parser.add_argument("--streaks", type=str, default=None,
+                        help="Path to JSON file with per-region per-SKU day counters. "
+                             "Parse yesterday's post for 'day N' markers; today = N+1 for "
+                             "still-flagged SKUs, 1 for new. Format: {\"UK\": {\"POW-X\": 4}}")
     args = parser.parse_args()
 
     today = date.fromisoformat(args.date) if args.date else date.today()
@@ -343,8 +367,16 @@ def main():
     if args.prior:
         with open(args.prior) as f:
             prior = json.load(f)
+    explained = {}
+    if args.explained_skus:
+        with open(args.explained_skus) as f:
+            explained = json.load(f)
+    streaks = {}
+    if args.streaks:
+        with open(args.streaks) as f:
+            streaks = json.load(f)
 
-    for region, post in build_all_posts(today, actions_by_region, completed, prior):
+    for region, post in build_all_posts(today, actions_by_region, completed, prior, explained, streaks):
         print(f"===== {region} =====")
         print(post)
         print()

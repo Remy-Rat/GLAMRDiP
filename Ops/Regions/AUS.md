@@ -9,7 +9,15 @@
 - **Labels SKU:** `ACC-LAB`
 - **Kit-adjusted items:** LIQ-HEA-5 (Heal), ACC-INS (Instructions) — filled/picked locally per kit
 - **3PL-supplied packaging:** None — all packaging tracked in G3PL
-- **ShipHero available:** Yes, but NOT used routinely — AUS 3GPL tab in Order Schedule is the live stock position. Export PO CSVs only for partial container check-in reconciliation.
+- **ShipHero available:** Yes. AUS 3GPL tab in Order Schedule remains the daily-snapshot view (Greg's AM paste). **MCP authed for live AUS-account queries** from 18 May 2026 — use for mid-day check-in confirmations, supplier-event verification, and quick PO line-item lookups ahead of tomorrow's paste. Export PO CSVs only for partial-check-in reconciliation. **Scope:** AUS account only — UK is on Fulfillable (not ShipHero), CA 247 is a separate ShipHero account requiring its own OAuth.
+
+### ShipHero MCP — query gotchas (AUS)
+- **PO name format:** `PO N _RefName` with a space-underscore between them (e.g. `PO 14 _AUS 05052026`, `PO 11_24-03-2026_Booklet AVI`). The shorthand in `## G3PL Known Issues` below ("PO 7 = AUS 07032026") is the conceptual mapping, not the literal ShipHero string.
+- **Use singular `purchase_order(po_number: ...)`** when you know the PO. The plural `purchase_orders` without a `first: N` cap will exceed the 4,004 max credits-per-operation and fail with code 30.
+- **`fulfillment_status: pending` ≠ unreceived.** Status doesn't always flip from Pending → Closed. Authoritative completion signal is `line_items.quantity_received == quantity` per SKU.
+- **Credit budget:** ~5-10 credits per typical PO query, 4,004 baseline restoring at 60/sec. Generous for ops-style use.
+- **Token file:** `~/.claude/skills/shiphero-public-api/token_response.json` (28-day refresh).
+
 - **Local fillers:** Outsource Packaging (Heal, Remove 120ml, Remove 500ml)
 
 ---

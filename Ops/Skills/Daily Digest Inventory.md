@@ -15,16 +15,19 @@ This page is the operator-facing reference. The Claude Code skill spec (the file
 **Kits:** projecting **X/d**, selling **Y/d** (±N% vs projection)
 
 **`Shopify vs DSR`**
-• [over-selling or dead SKUs] OR • None.
+• [SKU]: 0 sales ... - day N without sales  (or `OOS day N` if thread-explained)
+• [SKU]: selling X/d vs projected Y/d (Zx over) - day N above projection
+OR • None.
 
 **`Shopify vs 3PL`**
 • [3PL deduction breaches last 3d] OR • None.
 
 **`Action Points`**
-• `[new]` [Action].
-• `[ongoing]` [Action carried over from yesterday].
+1. `[new]` [Action].
+2. `[ongoing]` [Action carried over from yesterday].
 ```
 
+Action points are **numbered** so threads can reference them ("re: 2 done").
 `[new]` vs `[ongoing]` is derived by substring-matching today's actions against
 yesterday's action list (see pipeline step 5).
 
@@ -47,40 +50,46 @@ Each post stands alone — no parent post, no thread. Top divider only (no botto
    uv run --with pandas,openpyxl python3 Ops/Scripts/extract.py Nordic > /tmp/digest_nordic.json
    ```
 
-3. **Subagent per region (parallel)** — gather action points from Slack chats and Gmail (last 14 days).
+3. **Read yesterday's digest post bodies FIRST** from `C0AT34JKHL7` — `slack_read_channel(oldest=<36h ago>)`, find the 4 region posts by divider + `DAILY DIGEST` header, extract each region's numbered action bullets (strip `[new]`/`[ongoing]` tag and leading number). Hold per-region in memory so step 4 can pass them into the subagents.
 
-4. **Write `/tmp/qualitative.json`** keyed by region name (flat list of action strings):
+4. **Subagent per region (parallel)** — gather today's open actions from Slack + Gmail (last 14 days), AND identify which of yesterday's actions (passed in from step 3) were followed through in regional chat/email. Subagent returns `{ "actions": [...], "completed": [...] }`. See subagent prompt template below.
+
+5. **Read yesterday's digest thread replies and body** in `C0AT34JKHL7`. For each of the 4 region posts, `slack_read_thread(...)` and pull:
+   - **Completed actions** (→ `completed.json`): items marked actioned/done/in-flight, including numbered references like "re: 2 done".
+   - **Explained SKUs** (→ `explained_skus.json`): any SKU flagged in yesterday's `Shopify vs DSR` section where a teammate explained it as OOS / no-stock / supplier-issue / not-a-listing issue. Rendered as `OOS day N` today instead of `day N without sales`.
+   - **Streak counters** (→ `streaks.json`): parse yesterday's post body for `day N` markers per SKU. If a SKU is still flagged today, streak = N+1. Else streak = 1. Pre-streak-rollout posts = 1.
+
+6. **Merge into 5 JSON files:**
    ```json
-   {
-     "AUS": ["action 1", "action 2"],
-     "UK":  ["..."],
-     "CA":  ["..."],
-     "Nordic": []
-   }
-   ```
+   // /tmp/qualitative.json — today's open actions (from subagent `actions`)
+   { "AUS": ["action 1", "action 2"], "UK": ["..."], "CA": ["..."], "Nordic": [] }
 
-5. **Read yesterday's digest posts and their threads** in `C0AT34JKHL7`. For each region's post:
-   - Thread replies marking items actioned/done/in-flight → write short substrings to `/tmp/completed.json` (suppressed from today).
-   - Yesterday's action bullets (from the post body, not thread) → write short substrings to `/tmp/prior_actions.json`. Any of today's actions that substring-match become `[ongoing]`; others become `[new]`.
-
-   ```json
-   // /tmp/completed.json
+   // /tmp/completed.json — UNION of subagent `completed` + thread-reply done signals
    { "AUS": ["jar transfer from G3PL"], "UK": [], "CA": ["Mixam 1,300pcs booklet"], "Nordic": [] }
 
-   // /tmp/prior_actions.json
-   { "AUS": ["Heal local fill", "Katrina recount"], "UK": ["Chemence payment"], "CA": ["Zakka bubble mailers"], "Nordic": ["Paragon receipt"] }
-   ```
-   Both use case-insensitive substring match. Skip both files on the very first run.
+   // /tmp/prior_actions.json — yesterday's action bullets from step 3
+   { "AUS": ["Heal local fill"], "UK": ["Chemence payment"], "CA": ["Zakka"], "Nordic": ["Paragon receipt"] }
 
-6. **Build messages:**
+   // /tmp/explained_skus.json — thread-explained SKUs (OOS etc). Exact SKU match.
+   { "AUS": [], "UK": ["POW-COT-030", "POW-VIB-529"], "CA": [], "Nordic": [] }
+
+   // /tmp/streaks.json — per-SKU day counter; yesterday+1 for still-flagged, 1 for new.
+   { "UK": {"POW-COT-030": 5, "POW-VIB-529": 3}, "AUS": {}, "CA": {}, "Nordic": {} }
+   ```
+   Action matching is case-insensitive substring; SKU matching is exact.
+   First run: skip steps 3 and 5; omit `--completed`, `--prior`, `--explained-skus`, `--streaks`.
+
+7. **Build messages:**
    ```bash
    python3 Ops/Scripts/daily_digest.py \
      --qualitative /tmp/qualitative.json \
      --completed /tmp/completed.json \
-     --prior /tmp/prior_actions.json
+     --prior /tmp/prior_actions.json \
+     --explained-skus /tmp/explained_skus.json \
+     --streaks /tmp/streaks.json
    ```
 
-7. **Post to Slack** — `slack_send_message` 4 times (AUS → UK → CA → Nordic) to channel `C0AT34JKHL7`.
+8. **Post to Slack** — `slack_send_message` 4 times (AUS → UK → CA → Nordic) to channel `C0AT34JKHL7`.
 
 ---
 
@@ -101,18 +110,28 @@ Each parallel agent gets a prompt like this (substitute region-specific bits):
 
 > You're producing action points for the **[REGION]** region of GLAMRDiP for a daily inventory Slack digest. Today is **[YYYY-MM-DD]**.
 >
-> Read the following sources, focusing on the LAST 14 DAYS:
+> **Yesterday's action points for this region:**
+> [paste yesterday's bullets verbatim, one per line, stripped of tag and number]
+>
+> Read the following sources, focusing on the LAST 14 DAYS (prioritise the last 24-48h for evidence that yesterday's items were actioned):
 > 1. Slack channel `[INVENTORY_CHANNEL_ID]` — use `mcp__claude_ai_Slack__slack_read_channel` with `limit: 50` and `response_format: "concise"`. If too large, paginate.
 > 2. Slack channel `[3PL_CHANNEL_ID]` — same approach (skip if not applicable).
 > 3. Gmail — use `mcp__claude_ai_Gmail__search_threads` with queries like `(supplier_term) AND newer_than:14d`, pageSize=10. Only `get_thread` if a snippet is genuinely ambiguous AND important.
 >
 > [Region context block — 3PL name, fillers, current open issues — see Ops/Regions/[REGION].md for content]
 >
-> Return ONLY a compact JSON object:
+> Return ONLY a compact JSON object with TWO arrays:
 > ```json
-> { "actions": ["Specific action 1", "Specific action 2"] }
+> {
+>   "actions":   ["Specific open action 1", "Specific open action 2"],
+>   "completed": ["yesterday action text that was followed through in regional chat or email"]
+> }
 > ```
-> Cap actions at 4. Each action <25 words. Action points are only things that still need to be done — drop anything already in flight. Output only the JSON.
+> - `actions`: still-open items. Cap 4. Each <25 words. Drop anything in flight.
+> - `completed`: any of the yesterday-items above that show clear follow-through in the regional channel or email (e.g. "PO placed @Peter", order confirmation email, recount posted). **If Remy/Daniel/Greg posted about it in the regional chat, treat it as done** — don't restate. Leave empty if none.
+> - **Dated PO convention:** any reference in the channel to a PO in the format `[date] [PO type] [PO company]` (e.g. "UK 03062026 Chemence", "22-04-2026 recommended PO", "CA 21062026 container") means that PO is **already in motion / being placed**. Do not surface it as a "place the next PO" action. Only flag specific unblockers (deposit unpaid, supplier silent, invoice missing).
+>
+> Output only the JSON.
 
 ---
 

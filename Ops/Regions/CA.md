@@ -9,7 +9,7 @@
 - **Labels SKU:** `ACC-LAB-CA`
 - **Kit-adjusted items:** LIQ-HEA-5 (Heal), ACC-INS (Instructions) — filled/picked locally per kit
 - **3PL-supplied packaging:** STO-BUB-BAG-S (247 supplies their own bubble wrap — exclude from monitoring)
-- **ShipHero available:** No — 247 Fulfilment uses a different system
+- **ShipHero available:** Yes — 247 Fulfilment runs on ShipHero. **MCP authed 18 May 2026** against the CA ShipHero workspace (account legacy_id 88557, owned by Joel admin@glamrdip.com — different ownership from AUS/UK which are Daniel-owned). Token at `~/.claude/skills/shiphero-public-api/token_ca.json`. Use `TOKEN_FILE=~/.claude/skills/shiphero-public-api/token_ca.json` when running auth scripts; load the token explicitly when querying so the right workspace is hit. Same gotchas as AUS account (see `Regions/AUS.md` for PO name format, singular vs plural query economics, status-vs-quantity-received quirk). CA's PO numbers are sequential and higher (currently PO 38+) vs AUS PO 14 — separate workspaces, separate sequences.
 - **Local fillers:** Swift Innovations (Heal, Remove 120ml, Remove 500ml)
 
 ---

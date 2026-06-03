@@ -10,7 +10,7 @@
 - **Kit-adjusted items:** LIQ-HEA-5 (Heal), LIQ-BAS-2 (Base), LIQ-GLO-4 (Glow), ACC-INS (Instructions) — picked by Fulfillable per kit via automation rules (confirmed 13 Apr 2026)
 - **Fulfillable kit rules:** Each kit order adds 1x ACC-INS + 1x LIQ-BAS-2 + 1x LIQ-GLO-4 + 1x LIQ-HEA-5. Bond + Seal are already in the CN kit. Each order adds 1x ACC-LAB-UK + 1x ACC-THA.
 - **3PL-supplied packaging:** TBD — confirm with Fulfillable
-- **ShipHero available:** Yes — Fulfillable runs on ShipHero. PO exports may be available on request via Benedict.
+- **ShipHero available:** Yes — Fulfillable runs on ShipHero. **MCP authed 18 May 2026** against the UK ShipHero account (account legacy_id 94185, login email daniel@scale-labs.com.au). Token at `~/.claude/skills/shiphero-public-api/token_uk.json`. Use `TOKEN_FILE=~/.claude/skills/shiphero-public-api/token_uk.json` when running auth scripts; load the token explicitly when querying so the right account is hit. Same gotchas apply as the AUS account (see `Regions/AUS.md` for PO name format, singular vs plural query economics, status-vs-quantity-received quirk). PO exports may also be available on request via Benedict.
 - **Local fillers:** Chemence (Base, Glow, Seal — 6-8 week lead time at 8k qty), Oils4Life (Heal)
 - **Exiting filler:** Liquipak (Remove 120ml/500ml) — no longer filling. Final PO placed Apr 2026. No replacement found.
 
