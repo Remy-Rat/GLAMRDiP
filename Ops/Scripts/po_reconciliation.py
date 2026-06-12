@@ -76,21 +76,29 @@ def load_po_lots(path: Path):
 
 
 def load_transfers(path: Path):
+    # Map columns by header name — the portal export schema drifts (e.g. a
+    # ProductName column appeared between Apr and Jun 2026 exports).
     wb = openpyxl.load_workbook(path, data_only=True)
     ws = wb["Transfer History"]
+    header = [str(c).strip() if c else "" for c in next(ws.iter_rows(min_row=1, max_row=1, values_only=True))]
+    idx = {name: i for i, name in enumerate(header)}
+    col = lambda r, name: r[idx[name]] if name in idx and idx[name] < len(r) else None
     rows = []
     for r in ws.iter_rows(min_row=2, values_only=True):
-        req_id, status, frm, to, tdate, rdate, approver, adate, sku, po, cn, units = r
-        if status != "APPROVED":
+        if col(r, "Status") != "APPROVED":
             continue
+        po = (col(r, "PONumber") or "").strip()
+        cn = (col(r, "CNFillingPO") or "").strip()
+        to = col(r, "To")
+        tdate, rdate, adate = col(r, "TransferDate"), col(r, "RequestDate"), col(r, "ApprovalDate")
         rows.append({
-            "req_id": req_id, "status": status, "from": frm, "to": to,
+            "req_id": col(r, "RequestId"), "status": "APPROVED", "from": col(r, "From"), "to": to,
             "transfer_date": str(tdate) if tdate else "",
             "request_date": str(rdate) if rdate else "",
-            "approver": approver,
+            "approver": col(r, "ApprovedBy"),
             "approval_date": str(adate) if adate else "",
-            "sku": sku, "po": (po or "").strip(), "cn": (cn or "").strip(),
-            "units": int(units or 0),
+            "sku": col(r, "SKU"), "po": po, "cn": cn,
+            "units": int(col(r, "Units") or 0),
             "flow": classify_flow(po, cn, to),
         })
     return rows

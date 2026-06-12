@@ -1,4 +1,4 @@
-# Current Issues — last updated 2 Jun 2026 (UK)
+# Current Issues — last updated 4 Jun 2026 (CA)
 
 ## 🇦🇺 AUS — last updated 25 May 2026
 - **🔴 KIT-ULT-6 effectively OOS today (88 stock / 168/d 7d actual = <1d cover).** 09052026 brings 1,036 ULT (arrival 17 Jun) = ~6d post-arrival cover; 07062026 brings 1,244 (5 Jul) = 7d more. **~45 day total OOS condition across Jun-early Aug** until 08072026 (5 Aug) recovers it - **if Daniel sizes 08072026 ULT properly (today's draft).** No bridge available, accepted. Complete kits being substituted in fulfilment per user.
@@ -39,72 +39,90 @@
 - ✅ ACC-NAI-MAT offer confirmed still active (user 25 May; deduction at 211/d 7d explained)
 - ✅ Mani Mat / Square Tips kit-attach mechanism decoded (NAI ~79%, SQU ~52%, both via $85-gift offer)
 
-## 🇨🇦 CA — last updated 20 May 2026
-- **🔴 ACC-REM-500 OOS unavoidable early-mid June.** 1,943 stock / 108.9/d combined (Shopify 101 + ACC-REM-BUN-2 7.9) = 18d cover. Will OOS 2-9 Jun depending on rate. Swift fill (+9,000 in 14-05-2026 PO) blocked on Joel payment ($1,882.84 prior balance + $13,064.63 advance CAD). Even paying today, restock at 247 ~14 Jun = +6-12d OOS gap minimum. Every day of payment delay = +1d OOS during active $85-gift offer window.
-- **🔴 Butuo Remove bottles raw goods PO unplaced 5 days.** Recommended PO drafted 15 May (Remy → Joel in `#ca-inventory`). Feeds Swift 500ml fill cycle. Joel to place.
-- **🔴 Greenfield SO567407 order confirmation + invoice $23,743.68 awaiting GLAMRDiP "proceed".** One of three Swift ingredient feeders (NDA Completed, Amazon Completed, Greenfield Placed). Joel to confirm payment timing.
-- **🔴 Mani Mat 2 days cover — offer swap call needed TODAY.** 579 Travel bags on hand as candidate replacement. Square tips 6 days cover. Joel/Daniel decision.
-- **🟡 W20 (11-17 May) at parity (-5% vs scaled 160/d) — first parity kit week in 9+ weeks.** 8 prior weeks averaged -65 to -71%. Triple confirmed: CA-$85-GIF +125% vs 30d, KIT-COM-4 +77%, ACC-REM-500 +99%. **Driven by big ad spend + $85-gift offer combined** (user 20 May). Actual growth factor 1.58x vs 2.0x model. **Hold 2.0x — 2 more weeks of post-surge data before any sizing-down move** per [[growth-factor-framing]].
-- **🟡 CA 21062026 reconfigured to 40HQ WITH kits (14-15 May).** Daniel added 672 STA + 1,988 COM + 1,008 ULT + tips + Matte/Soak/Clear + 4,000 Remove Bowls + mailers/satchels. Revised PO sent to Sally — awaiting acceptance. Est. completion 28 May (8 days). Sally's $150k arrears + raw goods supply are gating risks. **Reverses the "no kit container until 2027" thesis from 15 Apr.**
-- **🟡 CA 25072026 sizing review needed before 22 May placement (2 days).** Currently 5,404 kits + 86,312 units. KIT-STA-2 at 316d cover today → 478d post-arrival. Selling at 13/d (10% of kit volume) vs Complete 96/d. **Likely same Shopify-flow STA→COM substitution as UK.** Daniel/Joel call to trim STA before Sally PO.
-- **🟡 Linda tip filling for CA 21062026** — Mani Mat 1,100 + Coffin 5,000 + Square 1,500 + Stiletto 200 + Ballerina 1,000 + Almond 1,000. Daniel to schedule.
-- **🟡 Mixam ACC-LAB-CA 10k reorder placed 14 May.** 14-05-2026 PO, ETA early Jun (~2 Jun). MX2029340 1,300pcs reprint still in production, ETA early-mid Jun.
-- **🟡 At-risk colours pre-21062026 (1 Jul arrival)**: Blue Moon, Blush, Cashmere, Forest Muse, Glacier Glow (OOS now), Latte Cloud, Lemonade, Peony Puff, Silent Eclipse. Restocked on 21062026 (600/600/800/etc). **Decision: accept OOS window** — no express bridge.
-- **🟡 ACC-REM (120ml) selling collapse confirmed structural (-96% vs model)**. Bundle volume now main 120ml channel (ACC-REM-BUN-1 5.7/d). 1,000 retained in Swift PO as fallback supply if upsell flips back to 120ml during the 500ml OOS window.
-- **🟢 LIQ-HEA-5 safe under actual-rate scenarios.** 6,487 stock / 131.5/d 3PL = 49d cover. Only tight if surge climbs back to model 170/d AND Joel delays >10d. **Rides on the same Swift fill — Heal resolves automatically when Remove does.**
-- **🟢 Kit deduction integrity clean.** All 3 kit SKUs aligned ±2/d on 14d window (arrival days excluded). All liquid/Remove gaps fully explained by kit-adjustment or bundles.
-- **🟢 POW-CLE-193 + POW-JUS-449 sustained high 3PL deductions (5-6x benchmark, 9 consecutive days).** Confirmed offer-attached pull — not data issue. Stocks 12,967 / 10,704 → 83d / 63d cover at burn. FYI for Greg.
-- **🟢 Dead-stock pile halved**: 40 → 21 SKUs / 29,979 → 14,021 units idle. Surge has lifted long-tail. Gav/Remy listing audit candidate.
-- **🟢 Zakka bubble mailer release forecast ~17 Jun.** Payment due before shipping.
-- **⚫ POS MODEL DSR stale on liquids** — Base 34 vs actual 7.4, Glo 20 vs 4.1, Sea 24 vs 5.3, Bon 16 vs 2.4, Soa 16 vs 1.9, Mat 14 vs 3.4, Sen 8 vs 3.6. ACC-REM-500 140 vs 100 (overstated). ACC-REM 62 vs 12.5 (5x overstated). Greg refresh outstanding. **Note**: doesn't affect kit-container sizing because liquids are CN-pre-packed in kits.
-- **⚫ ACC-LAB-CA B360 deduction rule** — still NaN. Greg to fix mapping. Manual override used for cover math.
-- **⚫ POW-OPA-040 -91% on 7d** — possible listing issue. 21062026 doesn't restock. Quick Shopify check.
-- **⚫ Booklet-missing CX email rollout** — list with Gav since 11 May, 9 days no reply.
+## 🇨🇦 CA — last updated 4 Jun 2026
+- **🔴 ACC-REM-500 OOS Tue 9 Jun (5 days) — 14-23 day OOS gap baked in.** Stock 507 / 90/d actual = 6d cover. Swift fill (+9,000) clock starts today (Greenfield arrived 4 Jun); production 14-21d + transit 5-7d = **arrival at 247 23 Jun – 2 Jul**. **Only remaining lever: switch CA upsell Remove 500ml → 120ml** (user 4 Jun: "hasn't switched yet but we can"). ACC-REM has 449d cover at 3,782 stock — plenty of supply for upsell role. Every day of delay on the switch = +1d of 500ml burn against tiny stock.
+- **🔴 Linda tips NOT making CA 21062026.** User-confirmed 4 Jun: capacity issue. Pulls 9,800 units from 1 Jul restock (5k Coffin + 1.5k Square + 200 Stiletto + 1k Ballerina + 1k Almond + 1.1k Mani Mat). **Ballerina is the current offer tip** (per Daniel 27 May) — 424 stock + zero inbound until CA 30082026 (30 Aug) means offer-mix rotation likely needed mid-late June. Daniel to decide separate dispatch vs slip to 30082026.
+- **🔴 CA 30082026 new colour collections still missing.** Daniel re-flagged 2 Jun (channel attribution between #ca-inventory/#nordic-inventory ambiguous). User 4 Jun: "might be added, should be in slack but that's as far as we got". Joel sign-off pending on min 10k free-gift qty + 6-12 new colour collections. 40HQ Sally lead 5-6 weeks; window closes for new SKU additions in days.
+- **🟡 W22 kit selling -25% vs 2x scaled (103.4/d vs 138/d projection).** 3 consecutive declining weeks: W20 +10% (peak) → W21 -14% → W22 -25% → W23 (2d) -29%. Actual growth 1.57x. W20 confirmed offer/promo spike (+171% above prior 4-wk avg), NOT sustained trend. Per [[growth-factor-framing]] hold 2.0x for ordering; treat ~105/d as operational planning rate. **Watch W23 full-week:** if it settles 95-100/d that's the new floor; below 90/d = container sizing thesis exposed.
+- **🟡 Kits trending to chronic overstock.** Current 12,402 stock / 117d cover at actual 106/d. Post-21062026 (1 Jul) 125d. Post-25072026 ~176d. Post-30082026 (30 Aug) ~216d. Per [[growth-factor-framing]] — observation, not action. KIT-STA-2 at 339d cover at actual (sells 11.4/d) — STA-trim candidate for CA 30082026 if not already actioned.
+- **🟡 POW-DRE-D08 + POW-BLO-D07 emerging breakouts.** Both doubled 30d → 14d (2.4-2.5 → 5.1-5.2/d), +16-21% accel. Per [[dippi-prefix-convention]] D-suffix is legit CA-native code (not Nordic). No POS MODEL DSR set; not in 21062026 or 30082026 manifests. **Restock candidates for next CN PO.**
+- **🟡 POW-SUG-545 (Sugar Rush) sustained signal** — also flagged in UK this cycle. 30082026 only carries 400 units; undersized given +13% accel.
+- **🟢 Heal cover safe.** 4,751 stock / 108.3/d kit-adjusted = 44d → OOS 17 Jul. Same Swift fill lands 23 Jun – 2 Jul = 15-24d margin before OOS. Resolves automatically.
+- **🟢 Swift fill clock starts 4 Jun.** Joel paid, Greenfield ingredients arrived. Production 14-21d + transit 5-7d → 247 receipt 23 Jun – 2 Jul. Contents 6,500 LIQ-HEA-5 + 9,000 ACC-REM-500 + 1,000 ACC-REM + 30,000 STO-BUB-BAG-L.
+- **🟢 CA 21062026 (Birthday Sale, 40HQ) nearly complete and almost shipping** (user 4 Jun). Glass Slipper allocation set by Joel (CA = 400 each style / 4 cartons). Lily vessel: closes 1 Jun, sails 5 Jun, ETA warehouse 1 Jul. **Greg owes sheet update (22 Jul → 1 Jul).**
+- **🟢 CA 25072026 placed with numbers** (user 4 Jun).
+- **🟢 CA 30082026 placed 27 May.** 40HQ at 2x DSR (138 kits/d). 4,256 KIT-COM-4 (no STA/ULT this container — kit mix consolidation). Joel sign-off still pending on free-gift + colours.
+- **🟢 ACC-NAI-MAT (Mani Mat) offer swap complete.** 0 stock at 247 since ~27 May. Swapped out for gift card + Ballerina + colours. -100% drop is expected, not anomaly.
+- **🟢 Kit deduction integrity clean.** STA/COM/ULT Shopify vs 3PL aligned ±2/d. All liquid/Remove gaps explained by kit-adjustment or bundle deductions (LIQ-SET 1.4/d, BUN-1 5.2/d, BUN-2 4.4/d).
+- **🟢 POW-CLE-193 + POW-JUS-449 sustained offer pull continues.** 16+ days at 4-9x benchmark of 35. POW-CLE-193: model 172/d, Shopify 25/d, 3PL 126/d (offer pull). Stock 10,940 + 10k (21062026) + 10.6k (30082026) = comfortably resourced.
+- **🟢 7+ CA-POW-* legacy colours at -90% vs 30d** (LIP-570, ROS-522, COB-G17, BAL-521, SEC-G15, VAN-F01, LIM-G13, MAP-564, POW-F17, GOL-565, AMB-572). Gav listing audit candidate. Matches AUS AU-prefix fade pattern.
+- **🟢 Mixam MX2041057 (20k ACC-LAB-CA) shipped today** per Mixam email 3 Jun. ETA 247 ~18 Jun. ACC-LAB-CA cover safe through Aug with prior reprint + this PO.
+- **⚫ POS MODEL DSR stale across CA SKUs:** all liquids overstated 30-60% (BAS 14→9, GLO 8→4, SEA 12→7, BON 6→2, MAT 6→3, SOA 4→2, SEN-2 8→4, SEN-4 6→3). ACC-REM-500 120→90, ACC-REM 10→2, ACC-REM-BOW 30→2 (standalone — bundle inflates 3PL). ACC-TIP-ALM 148 broken (real ~5). Greg refresh outstanding.
+- **⚫ ACC-LAB-CA B360 deduction rule** — still NaN; Greg fix mapping. Sheet shows 0 stock; manual override uses last-known 6,878.
+- **⚫ Booklet-missing CX email rollout** — list with Gav since 11 May, 24d stale.
+- **⚫ 247 Apr rate sheet review** — Regina sent 19 May, 16d stale (Remy self-owned).
+- **⚫ Zakka bubble mailer balance owed pre-~17 Jun release.** 13d to deadline.
 
-### Resolved since last update (13 May → 20 May):
-- ✅ W20 kit recovery confirmed structural (not noise) — first parity-level week in 9+ weeks. Sales surge real and offer-driven.
-- ✅ Swift Heal + Remove 500ml fill — decision reversed from "skip lean" to "place full PO" (14 May). Ingredient feeders all in motion.
-- ✅ CA 21062026 reconfigured to 40HQ with kits. Revised PO sent to Sally (15 May).
-- ✅ Mixam 10k reorder placed 14 May (MX2041057). Now in production.
-- ✅ PO 37 POW-COL-G16 247 check-in — closed off earlier per user 20 May.
+### Resolved since last update (20 May → 4 Jun):
+- ✅ Swift payment cleared (Joel paid prior $1,882.84 + advance $13,064.63 CAD; 21-day blocker lifted).
+- ✅ Greenfield ingredient delivery arrived 4 Jun (user-confirmed).
+- ✅ Butuo Remove bottles raw goods PO placed (27 May).
+- ✅ Greenfield SO567407 paid 21 May (remittance sent).
+- ✅ Mani Mat → gift card / Ballerina tip offer swap (Daniel 27 May).
+- ✅ Glass Slipper qty allocation set by Joel (CA 4 cartons each style).
+- ✅ CA 21062026 PO accepted by Sally; container near completion.
+- ✅ CA 25072026 placed.
+- ✅ CA 30082026 placed 27 May (40HQ, 2x DSR).
+- ✅ W20 parity confirmed as one-week spike (not sustained trend) once W21-W22 data landed.
 
-## 🇬🇧 UK — last updated 2 Jun 2026
-- **🔴 LIQ-BAS-2 11-16 day OOS gap (24-29 Jun → ~10 Jul).** Chemence PO 22-04-2026 completion now confirmed **3 Jul (verbal via Vik, Remy Slack 28 May)**, no formal email. At W22 actual 119/d (kit-adj + std): stock 3,283 → OOS 29 Jun. At scaled 136.5/d: OOS 26 Jun. Goods land Fulfillable ~10 Jul (5 biz days ship). **No mitigation in flight.** Joel to email Vik today for written confirmation + express options.
-- **🔴 Liquipak balance £3,973.30 pay by Mon 9 Jun.** PO 11 confirmed: 4,155 ACC-REM (120ml) + 400 ACC-REM-500. Stock 519 + 43 B360 packup → at combined 30d 39.9/d = 13d cover → OOS ~15 Jun. Mon pay → ship Tue → 5 biz days transit → land 16 Jun → 0-3d OOS gap. Don't slip past Monday. Goods are ready; only payment is gating.
-- **🔴 Free-gift bridge SKUs critical.** ACC-TIP-BAL (Ballerina) 25 stock effectively OOS today (current offer). ACC-NAI-MAT / FRE-MANI / TRA-BAG all 0 standalone, 2,652 locked in B360 packup. Joel B360 balance unlocks. Coffin Tips swap (Asana due today, Remy) is the next bridge (978 std + 1,389 packup).
-- **🔴 ACC-LAB-UK 6.9d cover.** PO 17 (Print Runner) has 10,000 units, DPD-delivered to Joel 28 May 13:54-14:54 BST per his iCloud forward — **not Fulfillable**. PO 17 still 0% received in ShipHero. Joel must forward labels this week or gap opens ~9 Jun.
-- **🔴 B360 stock-out balance still owed.** Deposit paid 14 May. Balance unconfirmed in window. 17 OOS colours + 5 free-gift SKUs locked. Mihir/Mason silent 14+ days.
-- **🔴 UK 30082026 PO placed by Daniel 27 May** — 40HQ at 1.5x DSR (134 kits/d), 5k Remove 120ml, 5k Glass Slippers, 2k Gels mailers, big Base/Glow empties for UK + Nordic + EU. Care liquid NOT in this or next container. **Joel sign-off pending on free-gift qty (min 7k Travel Bag/Tray/Mat) + 6-12 new colour collections.**
-- **🟡 Next Chemence PO going in this week — 9,000 BAS + 8,000 GLO, brief Vik "complete by Fri 15 Aug".** Lands Fulfillable ~22 Aug. Methodology per [[next-fill-po-sizing]]: covers one full Chemence cycle at W22 actual rate, place PO-after-this ~first week Aug. If Vik signals 9k Base needs more lead time, drop to 8k and accept perma-overlap.
-- **🟡 Vik formal email confirming 3 Jul still outstanding.** 35 days silent on email since 29 Apr free-issue tracker. Verbal commitment only on completion date. Remy to chase.
-- **🟡 Liquipak replacement Path A/B/C stalled 20 days.** Daniel silent since 13 May. PO 11 is the last Liquipak fill ever — no replacement = no further 120ml supply.
-- **🟡 Fulfillable £10k remaining balance.** Joel paid part 28 May, committed remainder "next week" = this week.
-- **🟡 Remove Bowls upsell capacity** — Remy asked Joel 28 May about LCL bridge (Bowls currently the website upsell, no container space). No Joel reply.
-- **🟡 UPS routing fix** — Royal Mail/ShipHero 2-package bug. Fulfillable holds + credits, but UPS adds £2.40/shipment. Joel acceptance pending.
-- **🟡 Fulfillable returns SOP** — Roisin proposed per-campaign FREEGIFT-MAY SKUs 29 May. Daniel pushed back 31 May. Roisin reply outstanding.
-- **🟡 Ireland IOSS shipping mapping** — Roisin 1 Jun confirmed RoI ships from UK but customs info needs updating + map to Spring Tracked IOSS. On us (Remy).
-- **🟡 Seby Bill 618199 invoice audit** — Remy completed his side 28 May (Asana closed). Seby silent 18d on detailed reply. Wait one more cycle then chase.
-- **🟡 W22 kit softening to 99.3/d (-14% vs scaled).** W20 108.7 → W21 104.7 → W22 99.3. Three consecutive weeks declining. Per [[forecast-dsr-planning-rate]]: hold growth factor at 1.3x and container sizing. Revisit if W23 dips below 95/d.
-- **🟡 ACC-REM-500 sustained spike** — s7 58/d, s30 24.6/d = +136%. Treat 50-60/d as the new baseline; no action needed (stock 3,819 = 66d cover).
-- **🟡 POW-SUG-545 (Sugar Rush) sole sustained overseller** — 5.6x model, day 6. Stock 24 = OOS this week. No CN inbound. Listing/promo audit recommended.
-- **🟡 Kit mix consolidation around COM** — COM 69% / ULT 30% / STA 1% of kit volume. STA functionally dead. Per-kit model DSRs need refresh (Greg).
-- **🟢 Print Runner artwork resolved 26 May** (Joel + Al).
-- **🟢 Powder Room book-in resolved 19 May** (Roisin booked; backorder queue cleared 19-20 May).
-- **🟢 G3PL Additional Pick Fee** — Jake confirmed formula error 26 May; resolution agreed.
-- **🟢 KIT-STA-2 substitution to KIT-COM-4** confirmed automatic via Shopify flow — no decision needed.
-- **🟢 Oils4Life Heal** — 64d cover at W22 actual rate. Dale silent 21d+. Remy outbound chase to plan next fill.
+## 🇬🇧 UK — last updated 9 Jun 2026
+- **🔴 LIQ-BAS-2 -20 day OOS gap (~20 Jun → 10 Jul).** Chemence 22-04-2026 completion 3 Jul (verbal Vik 28 May, no formal email — now 42d silent on email). At kit-adjusted scaled rate 130/d: 1,395 stock → OOS 20 Jun. At W23 actual rate 126/d: OOS ~21 Jun. Lands Fulfillable ~10 Jul (5 biz days ship). **No mitigation plan in Slack.** Joel placed 3 new Chemence POs 5-8 Jun (UK + NORDIC + EU) but did not address 22-04 compression. Mitigation options: express bridge from CN, kit-throttle, free-gift attach reduction, cross-regional pull.
+- **🔴 LIQ-GLO-4 -9 day OOS gap.** 2,547 stock / 116-117/d kit-adj = 22d → OOS ~1 Jul. Chemence 22-04 brings 6,000, lands 10 Jul. Less critical than Base but same gap window.
+- **🔴 LIQ-HEA-5 Oils4Life fill PO due by 14 Jun.** 2,908 stock / 108-117/d kit-adj = 25-27d → OOS ~6 Jul. Lead 51d (~14d ingredients + 30d fill + 7d transit). Dale silent 21d+. Recommended 8,000 units (68d post-fill cover).
+- **🔴 ACC-REM-500 sustained +83% over 30d.** 7d 75/d > 14d 66.5 > 30d 40.6, still accelerating. 2,718 stock / 66.5 = 41d → OOS ~20 Jul. **This is now the binding constraint for Liquipak replacement timing.** PO 11 (final Liquipak ever) brings only 400 ACC-REM-500. Lands 16 Jun → 47d post-arrival cover. Replacement filler must be onboarded by ~mid-Jun for any chance of bridging.
+- **🟢 ACC-LAB-UK booked in — ~104d cover.** PO 17 (10,000 ACC-LAB-UK) fully received per ShipHero `quantity_received` (status "pending" unreliable per [[shiphero-status-unreliable]]). Stock now ~11,423 effective. Next Print Runner top-up ~mid-Aug.
+- **🟢 PO 18 (B360 → Fulfillable) closed 6 Jun.** 5 priority free-gift bridge SKUs received at Fulfillable: ACC-NAI-MAT +386, ACC-TRA-BAG +751, ACC-FRE-MANI +1,529, POW-BLO-042 +2,700, POW-CRE-217 +5,686. Website offer can rotate to Mat/Travel Bag instead of further tip churn.
+- **🟡 ACC-TIP-COF 0.6d cover (current offer).** 68 stock + 1,389 in B360 packup (still locked - PO 18 was the priority 5 SKUs only). Bridge can rotate to Mat / Travel Bag / Tray now that PO 18 is in.
+- **🔴 B360 stock-out balance £8,500 + disposal-quote dispute.** Joel still owes B360 balance — Mihir/Mason silent 25d+. Daniel 4 Jun flagged Abdul's $5kAUD disposal quote as suspicious. **Still locked behind balance: 17 OOS colours + ACC-LAB legacy 7,349 + ACC-INS/THA packup + tip variants.** UK/EU- prefix dead: LIP-570, BAL-521, POW-F17 (all 6-7/d historically, 7d zero sales).
+- **🔴 UK 30082026 sign-off pending — 13d past place date.** 40HQ at 1.5x DSR (134 kits/d). Joel sign-off pending on free-gift qty (min 7k Mat/Tray/Travel Bag) + 6-12 new colour collections. Sally lead 5-6w; window closes within days for new SKU additions.
+- **🔴 Liquipak replacement filler outreach pending.** Leading Solvents draft ready (Remy 9 Jun). Send to 3-4 candidates this week. PO 11 is final Liquipak ever. 6-week onboarding window means anything beyond ~mid-Jun delivers post-OOS on ACC-REM-500.
+- **🟡 Vik formal email confirming 3 Jul Chemence completion** — 42d silent on email since 28 Apr "processing". Verbal commitment only. Remy chase outstanding.
+- **🟡 Joel payments stack** — Fulfillable £10k remaining (committed 28 May "next week"); Print Runner balance (artwork confirmed 26 May).
+- **🟡 LCL Remove Bowls bridge** — 12d unanswered. 28 May + 4 Jun re-asks. Bowls currently the website upsell, no container space.
+- **🟡 UPS £2.40/shipment routing fix** — Joel acceptance pending. Royal Mail/ShipHero 2-package bug; Fulfillable holds + credits.
+- **🟡 Fulfillable returns SOP** — Roisin proposed per-campaign FREEGIFT-MAY SKUs 29 May. Daniel pushed back 31 May. Roisin reply outstanding 9d.
+- **🟡 G3PL / Fulfillable / 247 Packing SOP audit** — Daniel 2 Jun email. Katrina accepted same day; Ben/Seby reply outstanding 7d.
+- **🟡 Ireland IOSS shipping mapping** — Roisin 1 Jun confirmed RoI ships from UK; customs info update done by Daniel 4 Jun. Map to Spring Tracked IOSS still on Remy.
+- **🟡 Sweden re-ship UK2NOEXPRES** — Remy reopened 4 Jun (was dead 26d). Roisin engaged; Daniel asked for DHL Express; collection an option. Active.
+- **🟡 Seby Bill 618199 invoice audit** — Remy closed our side 28 May. Seby silent 25d on detailed reply.
+- **🟡 B360 deposit return ($30k AUD)** — separate from £8,500 stock-out balance. Joel chased Mason 5 Jun; Abdul replied "today" 8 Jun. Expected this week.
+- **🟢 W23 kit recovery confirmed at 107.0/d (-7.5% vs scaled).** Strongest week since W20 peak (108.7). Sequence: W17 trough (63) → W20 peak (108.7) → W21-W22 normalisation → W23 re-acceleration. Hold 1.3x for ordering; treat ~107/d as operational planning rate.
+- **🟢 Liquipak balance £3,973.30 paid by Joel 9 Jun.** PO 11 ships Tue 10 Jun → lands Fulfillable ~16 Jun. 4,155 ACC-REM + 400 ACC-REM-500. ACC-REM (120ml) post-arrival cover: 116d ✓.
+- **🟢 Next Chemence POs placed by Joel 5-8 Jun.** UK + NORDIC + EU all sent within 3 days (9k BAS + 8k GLO UK). Vik silent on all 4 open POs.
+- **🟢 Coffin Tips offer live** (3 Jun). Asana task closed.
+- **🟢 POW-SUG-545 reset complete** — was 5.6x model 8+ days. Now 7d 5.0, 14d 6.1, 30d 4.8 (+5%). Model still 1.3; needs Greg refresh to ~5/d.
+- **🟢 KIT-STA-2 substitution to KIT-COM-4** confirmed permanent. Mix now COM 77% / ULT 22% / STA 1%.
+- **🟡 Kit mix consolidation** — Per-kit model DSRs need refresh (Greg): STA 6.5→1, COM 68.9→78-90, ULT 40.3→22-28.
+- **🟡 Growth factor health** — actual 1.08x vs target 1.3x = -17% gap. Hold 1.3x per [[growth-factor-framing]]; flag overstock risk on future ULT containers.
+- **🟡 POW-CRE-217 massive overstock** — 5,512 stock / 9.0 actual = 612d. Future containers should trim.
+- **🟡 5+ POW colours overperforming model 28-100%** — POW-CHA-011 (+50%), POW-PRI-215 (+100%, 30 stock = 3d cover), POW-FLO-024 (+54%), POW-TRO-330 (+43%), POW-YOU-256 (+66%), POW-SWE-001 (+57%). UK 03062026 quantities at 1-3 weeks cover at actual rates regardless of mitigation.
+- **🟡 Care liquid not in UK 30082026 or next container.** Watch Oct/Nov cover gap (Daniel/Remy monitor).
 - **⚫ Fulfillable deduction integrity BLIND — 5th cycle.** ShipHero `inventory_changes` 500-edge cap (see [[shiphero-inventory-changes-cap]]). Cursor pagination dev work overdue.
-- **⚫ POS MODEL DSR refresh needed (Greg priority batch):** ACC-TIP-ALM 126.1 vs 4.9 actual (off by 121/d), POW-VIO-11932 115.7 vs 2.5, ACC-NAI-240 + ACC-NAI-100/180 both 15.6 vs 1.8-1.9, POW-OUR-772 18.2 vs 2.1, POW-DUS-346 16.9 vs 1.6, POW-ROY-304 14.3 vs 1.3, POW-ILL-001 15.6 vs 2.0; plus per-kit DSRs (STA 6.5→1, COM 68.9→58, ULT 40.3→28); plus LIQ-SEN-2/4 to 0 (discontinued per [[uk-discontinued-liquids]]).
-- **⚫ 52 colours 14d-zero sales** — ~28 B360-stranded (resume on balance), ~16-20 unlaunched/dead listings (Gav audit candidate).
-- **⚫ ShipHero PO 10/11/14/17 practice run worked** (2 Jun) — IDs map to `PO N_` prefix in po_number, not legacy_id. Fold into standard POS Check procedure each cycle.
+- **⚫ POS MODEL DSR refresh needed (Greg priority batch):** Per-kit DSRs (STA 6.5→1, COM 68.9→80, ULT 40.3→25); LIQ-MAT/SOA/BON ~50-70% overstated; POW-SUG-545 1.3→5; POW-CRE-217 126.1→9; POW-DRE-771 6.5→0.4; ACC-TIP-ALM 126.1→5; POW-VIO-11932 115.7→3; ACC-NAI-240/100/180 15.6→2; POW-OUR-772, POW-DUS-346, POW-ROY-304, POW-ILL-001 all 90%+ below; LIQ-SEN-2/4 to 0 per [[uk-discontinued-liquids]].
+- **⚫ 15 colours 7d-zero sales** — UK/EU- prefix (LIP-570, BAL-521, POW-F17) B360-locked at 6-7/d historical; POW-SLO-192/BAR-198/GOO-208/AWA-050/KIN-642/SWE-258 likely B360-locked at 3-9/d; POW-DAY-025/NOT-065/SEA-450/HEL-387/SHH-013/PER-229 likely dead-listing candidates for Gav.
+- **⚫ Dead stock — 6 idle colour SKUs (1,275 units)** — POW-EVE-019, CAN-016, YUL-007, JAC-619, ICO-775, LOT-411. Gav listing audit candidates.
 
-### Resolved since 26 May:
-- ✅ Vik gave verbal completion date (3 Jul) — was unknown across two prior reviews. Written confirmation still outstanding.
-- ✅ Print Runner artwork confirmed (Joel + Al, 26 May).
-- ✅ G3PL Additional Pick Fee dispute (Jake formula-error fix 26 May).
-- ✅ FIFO Asana task closed 1 Jun (Roisin reply was substantively pushback but task closed).
-- ✅ UK 30082026 PO placed (per user 2 Jun) — was "to place 27 May" in 26 May Recap.
-- ✅ Fulfillable invoice partial payment (Joel 28 May).
+### Resolved since 2 Jun:
+- ✅ Liquipak balance £3,973.30 paid (Joel 9 Jun) — 5-cycle stalled item cleared.
+- ✅ PO 17 / Print Runner ACC-LAB-UK fully received at Fulfillable (10,000/10,000 per ShipHero).
+- ✅ PO 18 / B360 → Fulfillable transfer closed 6 Jun (5 priority free-gift bridge SKUs released).
+- ✅ Next Chemence POs placed by Joel 5-8 Jun (UK + Nordic + EU all sent to Vik in 3 days).
+- ✅ Coffin Tips offer swap live (Asana task closed; current offer per 3 Jun summary).
+- ✅ Fulfilment backlog cleared (Ben confirmed 3 Jun all clear from Monday 1pm).
+- ✅ Product Information upload (Daniel did manually 4 Jun) — Ireland shipping unblocked.
+- ✅ Sweden re-ship UK2NOEXPRES reopened (Remy 4 Jun) — was dead 26d.
+- ✅ POW-SUG-545 sustained spike normalised — 8-day overshoot complete.
+- ✅ W23 kit rate +107/d — recovered from W22 trough.
 
 ## 🇸🇪 Nordic — last updated 30 Apr 2026
 - **🔴 Chemence Nordic Base/Glow fill PO — must be placed by ~9 May.** Daniel's 19 Apr rebuild: Base 20d / Seal 28d / Glow 36d cover. Chemence cycle 6w fill + 1w ship + 2w buffer = 63 days. No PO visible in Gmail this cycle. Joel to initiate.
